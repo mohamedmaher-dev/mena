@@ -1,9 +1,32 @@
 /// MENA: Middle East and North Africa country data and utilities.
 ///
-/// This package provides a curated list of MENA countries along with
-/// convenient utilities to look up items by ISO code, localized names,
-/// dial codes, and currency codes. It also exposes simple data models
-/// such as `MenaItemModel` and `CountryName`.
+/// This package provides a comprehensive, offline dataset of MENA countries
+/// with convenient search utilities and localized data. Perfect for building
+/// international applications, country selectors, phone number inputs, and
+/// region-specific features.
+///
+/// ## Key Features:
+/// - **Offline Data**: No network calls required - all data is bundled
+/// - **Localized Names**: Both Arabic and English names (common + official)
+/// - **Multiple Search Methods**: Find countries by code, name, dial code, or currency
+/// - **Flag Support**: Built-in SVG flag URLs via flagcdn.com
+/// - **JSON Serialization**: Easy integration with APIs and storage
+///
+/// ## Quick Start:
+/// ```dart
+/// import 'package:mena/mena.dart';
+///
+/// // Find a country by ISO code
+/// final country = MENA.getByCode('ae');
+/// print(country?.countryName.en); // "United Arab Emirates"
+///
+/// // Get all Middle East countries
+/// final middleEast = MENA.middleEast;
+/// print('${middleEast.length} countries'); // "13 countries"
+/// ```
+///
+/// @since 1.0.0
+/// @author Mohamed Maher
 library;
 
 /// Core library for MENA

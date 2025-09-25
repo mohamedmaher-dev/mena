@@ -1,46 +1,173 @@
 import '../mena.dart';
 part 'models/search_enum.dart';
 
-/// Provides utilities and data for Middle East and North Africa countries.
+/// Primary API class providing utilities and data for Middle East and North Africa countries.
 ///
+/// This class serves as the main entry point for accessing MENA country data.
 /// All collections exposed by this class are immutable lists that you can
-/// iterate over or use to perform lookups. Use the `getBy*` helpers to find a
-/// `MenaItemModel` by ISO lowercased country code, English name, international
-/// dial code (without a leading +), or currency code.
+/// safely iterate over or use to perform lookups without worrying about
+/// data corruption.
+///
+/// ## Search Methods:
+/// The class provides multiple search methods for different use cases:
+/// - [getByCode]: Find by ISO 3166-1 alpha-2 code (e.g., 'ae', 'sa')
+/// - [getByName]: Find by English name with partial matching
+/// - [getByDialCode]: Find by international dialing code
+/// - [getByCurrencyCode]: Find by ISO 4217 currency code
+/// - [getByIndex]: Direct array access with bounds checking
+///
+/// ## Data Collections:
+/// - [allCountries]: Complete list of all MENA countries (20 total)
+/// - [middleEast]: Middle Eastern countries only (13 countries)
+/// - [northernAfrica]: North African countries only (7 countries)
+///
+/// ## Example Usage:
+/// ```dart
+/// // Search examples
+/// final uae = MENA.getByCode('ae');
+/// final egypt = MENA.getByName('Egypt');
+/// final qatar = MENA.getByDialCode('974');
+/// final saudi = MENA.getByCurrencyCode('SAR');
+///
+/// // Access flag URL
+/// print(uae?.svgUrl); // "https://flagcdn.com/ae.svg"
+///
+/// // Iterate through regions
+/// for (final country in MENA.middleEast) {
+///   print('${country.countryName.en}: +${country.dialCode}');
+/// }
+/// ```
+///
+/// @since 1.0.0
 class MENA {
   /// Private constructor to prevent instantiation. All members are static.
   MENA._();
 
-  /// All MENA countries combined in a single list.
+  /// Complete list of all MENA countries (20 total).
+  ///
+  /// This list combines both [middleEast] and [northernAfrica] collections.
+  /// The list is immutable and safe to iterate over multiple times.
+  ///
+  /// **Countries included**: Saudi Arabia, UAE, Kuwait, Qatar, Bahrain, Oman,
+  /// Jordan, Lebanon, Palestine, Iraq, Syria, Yemen, Egypt, Sudan, Libya,
+  /// Tunisia, Algeria, Morocco, Mauritania.
   static final List<MenaItemModel> allCountries =
       MenaData.middleEastCountries + MenaData.northAfricaCountries;
 
-  /// North Africa countries only.
+  /// North African countries only (7 countries).
+  ///
+  /// **Countries included**: Egypt, Sudan, Libya, Tunisia, Algeria, Morocco, Mauritania.
+  ///
+  /// These countries are generally considered part of the Maghreb and Nile Valley regions.
   static List<MenaItemModel> northernAfrica = MenaData.northAfricaCountries;
 
-  /// Middle East countries only.
+  /// Middle Eastern countries only (13 countries).
+  ///
+  /// **Countries included**: Saudi Arabia, UAE, Kuwait, Qatar, Bahrain, Oman,
+  /// Jordan, Lebanon, Palestine, Iraq, Syria, Yemen.
+  ///
+  /// These countries are primarily located in Western Asia and the Arabian Peninsula.
   static List<MenaItemModel> middleEast = MenaData.middleEastCountries;
 
-  // Public methods ---------------------------------------------------------
+  // Public Search Methods --------------------------------------------------
 
-  /// Returns the country at [index] from [allCountries], or `null` if out of
-  /// range.
+  /// Returns the country at the specified [index] from [allCountries].
+  ///
+  /// **Parameters:**
+  /// - [index]: Zero-based index (0-19 for the 20 MENA countries)
+  ///
+  /// **Returns:** The [MenaItemModel] at the given index, or `null` if the
+  /// index is out of bounds (negative or >= 20).
+  ///
+  /// **Example:**
+  /// ```dart
+  /// final firstCountry = MENA.getByIndex(0);
+  /// final invalidIndex = MENA.getByIndex(25); // Returns null
+  /// ```
+  ///
+  /// **Performance:** O(1) - constant time lookup
   static MenaItemModel? getByIndex(int index) =>
       (index >= 0 && index < allCountries.length) ? allCountries[index] : null;
 
-  /// Finds a country by its ISO lowercased [code] (e.g. `ps`, `eg`).
+  /// Finds a country by its ISO 3166-1 alpha-2 country [code].
+  ///
+  /// **Parameters:**
+  /// - [code]: Two-letter country code (case-insensitive). Examples: 'AE', 'sa', 'PS'
+  ///
+  /// **Returns:** The matching [MenaItemModel], or `null` if not found.
+  ///
+  /// **Example:**
+  /// ```dart
+  /// final uae = MENA.getByCode('ae');        // ✓ Valid
+  /// final saudi = MENA.getByCode('SA');      // ✓ Valid (case-insensitive)
+  /// final invalid = MENA.getByCode('xyz');   // null
+  /// ```
+  ///
+  /// **Performance:** O(n) - linear search through 20 countries
   static MenaItemModel? getByCode(String code) =>
       _getBy(code, _SearchEnum.code);
 
-  /// Finds a country by its English [name] (partial, case-insensitive).
+  /// Finds a country by its English [name] using partial, case-insensitive matching.
+  ///
+  /// **Parameters:**
+  /// - [name]: Full or partial English country name. Examples: 'Egypt', 'arab', 'UAE'
+  ///
+  /// **Returns:** The first matching [MenaItemModel], or `null` if not found.
+  ///
+  /// **Example:**
+  /// ```dart
+  /// final egypt = MENA.getByName('Egypt');        // ✓ Exact match
+  /// final uae = MENA.getByName('emirates');       // ✓ Partial match
+  /// final saudi = MENA.getByName('saudi');        // ✓ Partial match
+  /// final invalid = MENA.getByName('germany');    // null
+  /// ```
+  ///
+  /// **Note:** Returns the first match found. For multiple potential matches,
+  /// consider iterating through [allCountries] manually.
+  ///
+  /// **Performance:** O(n) - linear search with string contains operation
   static MenaItemModel? getByName(String name) =>
       _getBy(name, _SearchEnum.name);
 
-  /// Finds a country by its international [dialCode] without the leading `+`.
+  /// Finds a country by its international dialing [dialCode].
+  ///
+  /// **Parameters:**
+  /// - [dialCode]: Country calling code without the '+' prefix. Examples: '971', '20', '966'
+  ///
+  /// **Returns:** The matching [MenaItemModel], or `null` if not found.
+  ///
+  /// **Example:**
+  /// ```dart
+  /// final uae = MENA.getByDialCode('971');      // ✓ UAE
+  /// final egypt = MENA.getByDialCode('20');     // ✓ Egypt
+  /// final saudi = MENA.getByDialCode('966');    // ✓ Saudi Arabia
+  /// final invalid = MENA.getByDialCode('1');    // null (US code, not MENA)
+  /// ```
+  ///
+  /// **Use Case:** Perfect for phone number input validation and formatting.
+  ///
+  /// **Performance:** O(n) - linear search through 20 countries
   static MenaItemModel? getByDialCode(String dialCode) =>
       _getBy(dialCode, _SearchEnum.dialCode);
 
-  /// Finds a country by its [currencyCode] (e.g. `AED`, `SAR`).
+  /// Finds a country by its ISO 4217 [currencyCode].
+  ///
+  /// **Parameters:**
+  /// - [currencyCode]: Three-letter currency code (case-insensitive). Examples: 'AED', 'sar', 'EGP'
+  ///
+  /// **Returns:** The matching [MenaItemModel], or `null` if not found.
+  ///
+  /// **Example:**
+  /// ```dart
+  /// final uae = MENA.getByCurrencyCode('AED');       // ✓ UAE Dirham
+  /// final saudi = MENA.getByCurrencyCode('sar');     // ✓ Saudi Riyal (case-insensitive)
+  /// final egypt = MENA.getByCurrencyCode('EGP');     // ✓ Egyptian Pound
+  /// final invalid = MENA.getByCurrencyCode('USD');   // null (not a MENA currency)
+  /// ```
+  ///
+  /// **Use Case:** Useful for e-commerce, payment processing, and financial applications.
+  ///
+  /// **Performance:** O(n) - linear search through 20 countries
   static MenaItemModel? getByCurrencyCode(String currencyCode) =>
       _getBy(currencyCode, _SearchEnum.currency);
 
