@@ -1,7 +1,7 @@
 name: mena
 description: Middle East and North Africa country data utilities for Dart/Flutter.
 version: 1.0.0
-# repository: https://github.com/my_org/my_repo
+repository: https://github.com/mohamedmaher-dev/mena
 
 environment:
   sdk: ^3.9.2
