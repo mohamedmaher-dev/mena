@@ -7,6 +7,8 @@ library;
 import 'package:mena/mena.dart';
 
 void main() {
+  print(MENA.getByCode('eg')?.currency.fullEnglishName);
+
   print('=== MENA Package Demo ===\n');
 
   // Basic search demonstrations
@@ -142,11 +144,15 @@ void _practicalUseCases() {
 
   // E-commerce currency display including Palestine
   print('\n💰 E-commerce Currency:');
-  final currencies = ['ILS', 'AED', 'SAR', 'EGP']; // Palestine first
+  final currencies = ['EGP', 'AED', 'SAR', 'ILS']; // Egypt first
   for (final currencyCode in currencies) {
     final country = MENA.getByCurrencyCode(currencyCode);
     if (country != null) {
-      print('  100 ${country.currency} = ${country.countryName.en}');
+      final currency = country.currency;
+      print('  ${currency.code}: ${currency.en} (${currency.ar})');
+      print(
+        '    Symbol: ${currency.symbol ?? 'N/A'} | Country: ${country.countryName.en}',
+      );
     }
   }
 
@@ -158,7 +164,11 @@ void _practicalUseCases() {
     print('  API Payload for ${apiCountry.countryName.en}:');
     print('  {');
     print('    "code": "${json['code']}"');
-    print('    "currency": "${json['currency']}"');
+    print('    "currency": {');
+    print('      "code": "${json['currency']['code']}"');
+    print('      "en": "${json['currency']['en']}"');
+    print('      "ar": "${json['currency']['ar']}"');
+    print('    }');
     print('    "dialCode": "${json['dialCode']}"');
     print('    "name": "${json['countryName']['en']}"');
     print('    "nameArabic": "${json['countryName']['ar']}"');

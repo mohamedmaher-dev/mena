@@ -191,6 +191,6 @@ class MENA {
     _SearchEnum.code => item.code,
     _SearchEnum.name => item.countryName.en,
     _SearchEnum.dialCode => item.dialCode,
-    _SearchEnum.currency => item.currency,
+    _SearchEnum.currency => item.currency.code,
   }.toLowerCase();
 }

@@ -1,4 +1,5 @@
 import 'country_name.dart';
+import 'currency.dart';
 import 'emoji_size.dart';
 import 'image_size.dart';
 import 'image_type.dart';
@@ -49,24 +50,28 @@ class MenaItemModel {
   /// ```
   final CountryName countryName;
 
-  /// ISO 4217 three-letter currency code in uppercase.
+  /// Currency information with localized names and symbols.
   ///
-  /// Standard international currency code used in financial systems,
-  /// e-commerce platforms, and currency conversion APIs.
+  /// Complete currency data including ISO 4217 code and localized names
+  /// in both English and Arabic. Provides access to currency symbols
+  /// and additional metadata.
   ///
-  /// **Common MENA currencies:**
-  /// - `AED`: UAE Dirham
-  /// - `SAR`: Saudi Riyal
-  /// - `EGP`: Egyptian Pound
-  /// - `QAR`: Qatari Riyal
-  /// - `KWD`: Kuwaiti Dinar
+  /// **Properties:**
+  /// - `code`: ISO 4217 currency code (e.g., "AED", "SAR", "ILS")
+  /// - `en`: English currency name (e.g., "UAE Dirham", "Egyptian Pound")
+  /// - `ar`: Arabic currency name (e.g., "درهم إماراتي", "جنيه مصري")
+  /// - `symbol`: Currency symbol if available (e.g., "د.إ", "₪")
   ///
   /// **Example:**
   /// ```dart
-  /// final uae = MENA.getByCode('ae');
-  /// print('Price: 100 ${uae?.currency}'); // "Price: 100 AED"
+  /// final palestine = MENA.getByCode('ps');
+  /// print('Code: ${palestine?.currency.code}'); // "ILS"
+  /// print('English: ${palestine?.currency.en}'); // "Egyptian Pound"
+  /// print('Arabic: ${palestine?.currency.ar}'); // "جنيه مصري"
+  /// print('Symbol: ${palestine?.currency.symbol}'); // "₪"
+  /// print('Price: 100 ${palestine?.currency.code}'); // "Price: 100 ILS"
   /// ```
-  final String currency;
+  final Currency currency;
 
   /// International dialing code without the leading '+' symbol.
   ///
@@ -291,7 +296,7 @@ class MenaItemModel {
   /// - Data export functionality
   Map<String, dynamic> toJson() => {
     'countryName': countryName.toJson(),
-    'currency': currency,
+    'currency': currency.toJson(),
     'dialCode': dialCode,
     'code': code,
   };
