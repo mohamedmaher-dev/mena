@@ -1,4 +1,7 @@
 import 'country_name.dart';
+import 'emoji_size.dart';
+import 'image_size.dart';
+import 'image_type.dart';
 
 /// Immutable data model representing a MENA country with complete metadata.
 ///
@@ -18,7 +21,7 @@ import 'country_name.dart';
 ///   print('Country: ${country.countryName.en}');           // "United Arab Emirates"
 ///   print('Currency: ${country.currency}');                // "AED"
 ///   print('Phone: +${country.dialCode}');                  // "+971"
-///   print('Flag: ${country.svgUrl}');                      // SVG flag URL
+///   print('Flag: ${country.getSvgUrl}');                   // SVG flag URL
 ///
 ///   // Serialize to JSON for API calls
 ///   final json = country.toJson();
@@ -125,6 +128,32 @@ class MenaItemModel {
     required this.code,
   });
 
+  /// International dialing code with leading '+' symbol.
+  ///
+  /// Returns the formatted international dialing code ready for display
+  /// in phone number inputs, contact forms, and user interfaces.
+  ///
+  /// **Format:** `+{dialCode}` (e.g., "+971", "+966", "+20")
+  ///
+  /// **Example:**
+  /// ```dart
+  /// final country = MENA.getByCode('ae');
+  /// final formatted = country?.dialCodeWithPlus; // "+971"
+  ///
+  /// // Use in phone number display:
+  /// Text('Call: ${country?.dialCodeWithPlus} 501234567');
+  ///
+  /// // Use in dropdown:
+  /// Text('${country?.dialCodeWithPlus} ${country?.countryName.en}');
+  /// ```
+  ///
+  /// **Use Cases:**
+  /// - Phone number formatting and display
+  /// - Country code dropdowns and selectors
+  /// - International contact forms
+  /// - Call-to-action buttons with phone numbers
+  String get dialCodeWithPlus => '+$dialCode';
+
   /// High-quality SVG flag URL provided by flagcdn.com.
   ///
   /// Returns a direct URL to the country's flag in SVG format.
@@ -135,18 +164,92 @@ class MenaItemModel {
   /// **Example:**
   /// ```dart
   /// final country = MENA.getByCode('ae');
-  /// final flagUrl = country?.svgUrl; // "https://flagcdn.com/ae.svg"
+  /// final flagImage = country?.getSvgUrl; // "https://flagcdn.com/ae.svg"
   ///
   /// // Use in Flutter Image widget:
-  /// Image.network(flagUrl)
+  /// Image.network(flagImage)
   ///
   /// // Use in HTML img tag:
-  /// <img src="$flagUrl" alt="UAE Flag" />
+  /// <img src="$flagImage" alt="UAE Flag" />
   /// ```
   ///
-  /// **Note:** The service supports various formats and sizes.
-  /// Check flagcdn.com documentation for advanced usage.
-  String get svgUrl => 'https://flagcdn.com/$code.svg';
+  /// **Note:** For specific sizes, use [getEmojiUrl] with [EmojiSize] enum.
+  /// Check [flagcdn.com](https://flagcdn.com) for more information.
+  String get getSvgUrl => 'https://flagcdn.com/$code.svg';
+
+  /// Returns an emoji flag URL with the specified [size].
+  ///
+  /// Provides access to different emoji flag image resolutions for various use cases.
+  /// All sizes maintain the standard 4:3 aspect ratio and are served as PNG format.
+  /// Perfect for emoji-style flag displays and modern UI designs.
+  ///
+  /// **Parameters:**
+  /// - [size]: The desired flag dimensions from [EmojiSize] enum
+  ///
+  /// **Returns:** A formatted URL string for the emoji flag image
+  ///
+  /// **Example:**
+  /// ```dart
+  /// final country = MENA.getByCode('ae');
+  ///
+  /// // Small icon for lists
+  /// final smallFlag = country?.getEmojiUrl(EmojiSize.size24x18);
+  ///
+  /// // Medium size for cards
+  /// final mediumFlag = country?.getEmojiUrl(EmojiSize.size48x36);
+  ///
+  /// // Large size for headers
+  /// final largeFlag = country?.getEmojiUrl(EmojiSize.size128x96);
+  /// ```
+  ///
+  /// **Use Cases:**
+  /// - Emoji-style flag displays
+  /// - Modern UI with icon flags
+  /// - High-DPI screen optimization
+  /// - Performance optimization (smaller sizes for lists)
+  /// - Chat applications and social features
+  ///
+  /// **URL Format:** `https://flagcdn.com/{dimensions}/{countryCode}.png`
+  String getEmojiUrl(EmojiSize size) =>
+      'https://flagcdn.com/${size.dimensions}/$code.png';
+
+  /// Returns an image flag URL with the specified [size] and [type].
+  ///
+  /// Provides access to width-based and height-based flag images with automatic
+  /// aspect ratio calculation. Supports both width (w) and height (h) based sizing
+  /// in multiple image formats.
+  ///
+  /// **Parameters:**
+  /// - [size]: The desired flag size from [ImageSize] enum (width or height based)
+  /// - [type]: The image format from [ImageType] enum (defaults to JPEG)
+  ///
+  /// **Returns:** A formatted URL string for the flag image
+  ///
+  /// **Example:**
+  /// ```dart
+  /// final country = MENA.getByCode('ae');
+  ///
+  /// // JPEG format (default) - smaller file size
+  /// final jpegFlag = country?.getImageUrl(ImageSize.w160);
+  /// final jpegExplicit = country?.getImageUrl(ImageSize.w160, ImageType.jpeg);
+  ///
+  /// // PNG format - lossless quality
+  /// final pngFlag = country?.getImageUrl(ImageSize.w160, ImageType.png);
+  ///
+  /// // Height-based sizing with PNG
+  /// final heightFlag = country?.getImageUrl(ImageSize.h120, ImageType.png);
+  /// ```
+  ///
+  /// **Use Cases:**
+  /// - **JPEG**: Web performance, bandwidth optimization, large displays
+  /// - **PNG**: High-quality displays, sharp edges, UI elements
+  /// - Flexible width or height-based layouts
+  /// - Responsive images with constraint-based sizing
+  /// - Print-quality images with precise dimensions
+  ///
+  /// **URL Format:** `https://flagcdn.com/{sizeParam}/{countryCode}.{extension}`
+  String getImageUrl(ImageSize size, [ImageType type = ImageType.jpeg]) =>
+      'https://flagcdn.com/${size.sizeParam}/$code.${type.extension}';
 
   @override
   String toString() =>

@@ -35,6 +35,9 @@ export 'src/mena_core.dart';
 /// Models for MENA
 export 'src/models/mena_item_model.dart';
 export 'src/models/country_name.dart';
+export 'src/models/emoji_size.dart';
+export 'src/models/image_size.dart';
+export 'src/models/image_type.dart';
 
 /// Data sources for MENA
 export 'src/data/mena_data.dart';

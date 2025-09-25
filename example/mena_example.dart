@@ -91,7 +91,23 @@ void _demonstrateLocalization() {
     print('English Official: ${country.countryName.officalEN}');
     print('Arabic Common: ${country.countryName.ar}');
     print('Arabic Official: ${country.countryName.officalAR}');
-    print('Flag URL: ${country.svgUrl}');
+    print('Default Flag URL: ${country.getSvgUrl}');
+    print('Small Emoji (24x18): ${country.getEmojiUrl(EmojiSize.size24x18)}');
+    print('Medium Emoji (48x36): ${country.getEmojiUrl(EmojiSize.size48x36)}');
+    print('Large Emoji (128x96): ${country.getEmojiUrl(EmojiSize.size128x96)}');
+    print('Small Image JPEG (w40): ${country.getImageUrl(ImageSize.w40)}');
+    print(
+      'Medium Image PNG (w160): ${country.getImageUrl(ImageSize.w160, ImageType.png)}',
+    );
+    print(
+      'Large Image JPEG (w640): ${country.getImageUrl(ImageSize.w640, ImageType.jpeg)}',
+    );
+    print(
+      'Height-based PNG (h60): ${country.getImageUrl(ImageSize.h60, ImageType.png)}',
+    );
+    print(
+      'Height-based JPEG (h120): ${country.getImageUrl(ImageSize.h120, ImageType.jpeg)}',
+    );
   }
 
   print('');
@@ -107,9 +123,10 @@ void _practicalUseCases() {
   final phoneCountry = MENA.getByDialCode('971');
   if (phoneCountry != null) {
     final localNumber = '501234567';
-    final international = '+${phoneCountry.dialCode}$localNumber';
+    final international = '${phoneCountry.dialCodeWithPlus}$localNumber';
     print('  Local: $localNumber');
     print('  International: $international');
+    print('  Formatted Code: ${phoneCountry.dialCodeWithPlus}');
     print('  Country: ${phoneCountry.countryName.en}');
   }
 

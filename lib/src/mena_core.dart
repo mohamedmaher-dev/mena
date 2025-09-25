@@ -30,7 +30,7 @@ part 'models/search_enum.dart';
 /// final saudi = MENA.getByCurrencyCode('SAR');
 ///
 /// // Access flag URL
-/// print(uae?.svgUrl); // "https://flagcdn.com/ae.svg"
+/// print(uae?.getSvgUrl); // "https://flagcdn.com/ae.svg"
 ///
 /// // Iterate through regions
 /// for (final country in MENA.middleEast) {
