@@ -84,29 +84,37 @@ void _demonstrateLocalization() {
   print('🌍 Localization Demo:');
   print('----------------------');
 
-  final country = MENA.getByCode('ae');
-  if (country != null) {
-    print('Country: ${country.code.toUpperCase()}');
-    print('English Common: ${country.countryName.en}');
-    print('English Official: ${country.countryName.officalEN}');
-    print('Arabic Common: ${country.countryName.ar}');
-    print('Arabic Official: ${country.countryName.officalAR}');
-    print('Default Flag URL: ${country.getSvgUrl}');
-    print('Small Emoji (24x18): ${country.getEmojiUrl(EmojiSize.size24x18)}');
-    print('Medium Emoji (48x36): ${country.getEmojiUrl(EmojiSize.size48x36)}');
-    print('Large Emoji (128x96): ${country.getEmojiUrl(EmojiSize.size128x96)}');
-    print('Small Image JPEG (w40): ${country.getImageUrl(ImageSize.w40)}');
+  final palestine = MENA.getByCode('ps');
+  if (palestine != null) {
+    print('Country: ${palestine.code.toUpperCase()} (Palestine)');
+    print('English Common: ${palestine.countryName.en}');
+    print('English Official: ${palestine.countryName.officalEN}');
+    print('Arabic Common: ${palestine.countryName.ar}'); // فلسطين
+    print('Arabic Official: ${palestine.countryName.officalAR}'); // دولة فلسطين
+    print('Palestine Flag URL: ${palestine.getSvgUrl}');
     print(
-      'Medium Image PNG (w160): ${country.getImageUrl(ImageSize.w160, ImageType.png)}',
+      'Small Palestine Emoji (24x18): ${palestine.getEmojiUrl(EmojiSize.size24x18)}',
     );
     print(
-      'Large Image JPEG (w640): ${country.getImageUrl(ImageSize.w640, ImageType.jpeg)}',
+      'Medium Palestine Emoji (48x36): ${palestine.getEmojiUrl(EmojiSize.size48x36)}',
     );
     print(
-      'Height-based PNG (h60): ${country.getImageUrl(ImageSize.h60, ImageType.png)}',
+      'Large Palestine Emoji (128x96): ${palestine.getEmojiUrl(EmojiSize.size128x96)}',
     );
     print(
-      'Height-based JPEG (h120): ${country.getImageUrl(ImageSize.h120, ImageType.jpeg)}',
+      'Small Palestine Image JPEG (w40): ${palestine.getImageUrl(ImageSize.w40)}',
+    );
+    print(
+      'Medium Palestine Image PNG (w160): ${palestine.getImageUrl(ImageSize.w160, ImageType.png)}',
+    );
+    print(
+      'Large Palestine Image JPEG (w640): ${palestine.getImageUrl(ImageSize.w640, ImageType.jpeg)}',
+    );
+    print(
+      'Height-based PNG (h60): ${palestine.getImageUrl(ImageSize.h60, ImageType.png)}',
+    );
+    print(
+      'Height-based JPEG (h120): ${palestine.getImageUrl(ImageSize.h120, ImageType.jpeg)}',
     );
   }
 
@@ -118,21 +126,23 @@ void _practicalUseCases() {
   print('💼 Practical Use Cases:');
   print('------------------------');
 
-  // Phone number formatting
-  print('📱 Phone Number Formatting:');
-  final phoneCountry = MENA.getByDialCode('971');
+  // Phone number formatting with Palestine
+  print('📱 Phone Number Formatting (Palestine):');
+  final phoneCountry = MENA.getByDialCode('970');
   if (phoneCountry != null) {
     final localNumber = '501234567';
     final international = '${phoneCountry.dialCodeWithPlus}$localNumber';
     print('  Local: $localNumber');
     print('  International: $international');
     print('  Formatted Code: ${phoneCountry.dialCodeWithPlus}');
-    print('  Country: ${phoneCountry.countryName.en}');
+    print(
+      '  Country: ${phoneCountry.countryName.en} (${phoneCountry.countryName.ar})',
+    );
   }
 
-  // E-commerce currency display
+  // E-commerce currency display including Palestine
   print('\n💰 E-commerce Currency:');
-  final currencies = ['AED', 'SAR', 'EGP'];
+  final currencies = ['ILS', 'AED', 'SAR', 'EGP']; // Palestine first
   for (final currencyCode in currencies) {
     final country = MENA.getByCurrencyCode(currencyCode);
     if (country != null) {
@@ -140,9 +150,9 @@ void _practicalUseCases() {
     }
   }
 
-  // JSON serialization for API
-  print('\n📡 JSON Serialization:');
-  final apiCountry = MENA.getByCode('qa');
+  // JSON serialization for API with Palestine
+  print('\n📡 JSON Serialization (Palestine):');
+  final apiCountry = MENA.getByCode('ps');
   if (apiCountry != null) {
     final json = apiCountry.toJson();
     print('  API Payload for ${apiCountry.countryName.en}:');
@@ -151,6 +161,7 @@ void _practicalUseCases() {
     print('    "currency": "${json['currency']}"');
     print('    "dialCode": "${json['dialCode']}"');
     print('    "name": "${json['countryName']['en']}"');
+    print('    "nameArabic": "${json['countryName']['ar']}"');
     print('  }');
   }
 

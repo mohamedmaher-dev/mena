@@ -163,8 +163,8 @@ class MenaItemModel {
   ///
   /// **Example:**
   /// ```dart
-  /// final country = MENA.getByCode('ae');
-  /// final flagImage = country?.getSvgUrl; // "https://flagcdn.com/ae.svg"
+  /// final palestine = MENA.getByCode('ps');
+  /// final flagImage = palestine?.getSvgUrl; // "https://flagcdn.com/ps.svg"
   ///
   /// // Use in Flutter Image widget:
   /// Image.network(flagImage)
@@ -190,16 +190,16 @@ class MenaItemModel {
   ///
   /// **Example:**
   /// ```dart
-  /// final country = MENA.getByCode('ae');
+  /// final palestine = MENA.getByCode('ps');
   ///
   /// // Small icon for lists
-  /// final smallFlag = country?.getEmojiUrl(EmojiSize.size24x18);
+  /// final smallFlag = palestine?.getEmojiUrl(EmojiSize.size24x18);
   ///
   /// // Medium size for cards
-  /// final mediumFlag = country?.getEmojiUrl(EmojiSize.size48x36);
+  /// final mediumFlag = palestine?.getEmojiUrl(EmojiSize.size48x36);
   ///
   /// // Large size for headers
-  /// final largeFlag = country?.getEmojiUrl(EmojiSize.size128x96);
+  /// final largeFlag = palestine?.getEmojiUrl(EmojiSize.size128x96);
   /// ```
   ///
   /// **Use Cases:**
@@ -227,17 +227,17 @@ class MenaItemModel {
   ///
   /// **Example:**
   /// ```dart
-  /// final country = MENA.getByCode('ae');
+  /// final palestine = MENA.getByCode('ps');
   ///
   /// // JPEG format (default) - smaller file size
-  /// final jpegFlag = country?.getImageUrl(ImageSize.w160);
-  /// final jpegExplicit = country?.getImageUrl(ImageSize.w160, ImageType.jpeg);
+  /// final jpegFlag = palestine?.getImageUrl(ImageSize.w160);
+  /// final jpegExplicit = palestine?.getImageUrl(ImageSize.w160, ImageType.jpeg);
   ///
   /// // PNG format - lossless quality
-  /// final pngFlag = country?.getImageUrl(ImageSize.w160, ImageType.png);
+  /// final pngFlag = palestine?.getImageUrl(ImageSize.w160, ImageType.png);
   ///
   /// // Height-based sizing with PNG
-  /// final heightFlag = country?.getImageUrl(ImageSize.h120, ImageType.png);
+  /// final heightFlag = palestine?.getImageUrl(ImageSize.h120, ImageType.png);
   /// ```
   ///
   /// **Use Cases:**

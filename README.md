@@ -39,21 +39,22 @@ import 'package:mena/mena.dart';
 
 void main() {
   // Find country by ISO code
-  final uae = MENA.getByCode('ae');
-  print(uae?.countryName.en); // "United Arab Emirates"
+  final palestine = MENA.getByCode('ps');
+  print(palestine?.countryName.en); // "Palestine"
+  print(palestine?.countryName.ar); // "فلسطين"
 
   // Search by name
   final egypt = MENA.getByName('Egypt');
   print(egypt?.currency); // "EGP"
 
   // Find by phone code
-  final saudi = MENA.getByDialCode('966');
-  print(saudi?.dialCodeWithPlus); // "+966"
+  final palestineByPhone = MENA.getByDialCode('970');
+  print(palestineByPhone?.dialCodeWithPlus); // "+970"
 
-  // Get flag URLs
-  print(uae?.getSvgUrl); // SVG flag
-  print(uae?.getEmojiUrl(EmojiSize.size48x36)); // 48x36 PNG
-  print(uae?.getImageUrl(ImageSize.w160, ImageType.png)); // 160px PNG
+  // Get Palestine flag URLs
+  print(palestine?.getSvgUrl); // SVG flag
+  print(palestine?.getEmojiUrl(EmojiSize.size48x36)); // 48x36 PNG
+  print(palestine?.getImageUrl(ImageSize.w160, ImageType.png)); // 160px PNG
 }
 ```
 
@@ -96,28 +97,28 @@ MENA provides the most comprehensive flag system available for Dart packages, of
 ### Usage Examples
 
 ```dart
-final country = MENA.getByCode('ae');
+final palestine = MENA.getByCode('ps');
 
 // SVG flag (scalable)
-final svgFlag = country?.getSvgUrl;
-// "https://flagcdn.com/ae.svg"
+final svgFlag = palestine?.getSvgUrl;
+// "https://flagcdn.com/ps.svg"
 
 // Emoji-style PNG flags
-final smallEmoji = country?.getEmojiUrl(EmojiSize.size24x18);
-// "https://flagcdn.com/24x18/ae.png"
+final smallEmoji = palestine?.getEmojiUrl(EmojiSize.size24x18);
+// "https://flagcdn.com/24x18/ps.png"
 
-final mediumEmoji = country?.getEmojiUrl(EmojiSize.size48x36);
-// "https://flagcdn.com/48x36/ae.png"
+final mediumEmoji = palestine?.getEmojiUrl(EmojiSize.size48x36);
+// "https://flagcdn.com/48x36/ps.png"
 
 // Flexible image flags
-final jpegFlag = country?.getImageUrl(ImageSize.w160);
-// "https://flagcdn.com/w160/ae.jpg" (default JPEG)
+final jpegFlag = palestine?.getImageUrl(ImageSize.w160);
+// "https://flagcdn.com/w160/ps.jpg" (default JPEG)
 
-final pngFlag = country?.getImageUrl(ImageSize.w160, ImageType.png);
-// "https://flagcdn.com/w160/ae.png"
+final pngFlag = palestine?.getImageUrl(ImageSize.w160, ImageType.png);
+// "https://flagcdn.com/w160/ps.png"
 
-final heightFlag = country?.getImageUrl(ImageSize.h120, ImageType.png);
-// "https://flagcdn.com/h120/ae.png"
+final heightFlag = palestine?.getImageUrl(ImageSize.h120, ImageType.png);
+// "https://flagcdn.com/h120/ps.png"
 ```
 
 ## 📚 API Reference
@@ -126,10 +127,10 @@ final heightFlag = country?.getImageUrl(ImageSize.h120, ImageType.png);
 
 | Method                      | Description                     | Example                         |
 | --------------------------- | ------------------------------- | ------------------------------- |
-| `getByCode(String)`         | Find by ISO 3166-1 alpha-2 code | `MENA.getByCode('ae')`          |
-| `getByName(String)`         | Find by English name (partial)  | `MENA.getByName('Emirates')`    |
-| `getByDialCode(String)`     | Find by international dial code | `MENA.getByDialCode('971')`     |
-| `getByCurrencyCode(String)` | Find by ISO 4217 currency code  | `MENA.getByCurrencyCode('AED')` |
+| `getByCode(String)`         | Find by ISO 3166-1 alpha-2 code | `MENA.getByCode('ps')`          |
+| `getByName(String)`         | Find by English name (partial)  | `MENA.getByName('Palestine')`   |
+| `getByDialCode(String)`     | Find by international dial code | `MENA.getByDialCode('970')`     |
+| `getByCurrencyCode(String)` | Find by ISO 4217 currency code  | `MENA.getByCurrencyCode('ILS')` |
 | `getByIndex(int)`           | Get by array index (0-18)       | `MENA.getByIndex(0)`            |
 
 ### Data Collections
@@ -264,7 +265,7 @@ class PhoneInput extends StatefulWidget {
 }
 
 class _PhoneInputState extends State<PhoneInput> {
-  MenaItemModel? selectedCountry = MENA.getByCode('ae'); // Default to UAE
+  MenaItemModel? selectedCountry = MENA.getByCode('ps'); // Default to Palestine
 
   @override
   Widget build(BuildContext context) {
@@ -308,13 +309,13 @@ import 'package:mena/mena.dart';
 class FlagGallery extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final country = MENA.getByCode('ae');
+    final palestine = MENA.getByCode('ps');
 
     return Column(
       children: [
-        // High-quality SVG flag
+        // High-quality SVG flag for Palestine
         Image.network(
-          country!.getSvgUrl,
+          palestine!.getSvgUrl,
           width: 200,
           height: 150,
         ),
@@ -325,29 +326,29 @@ class FlagGallery extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            // Small icon
+            // Small Palestine flag icon
             Image.network(
-              country.getEmojiUrl(EmojiSize.size24x18),
+              palestine.getEmojiUrl(EmojiSize.size24x18),
               width: 24,
               height: 18,
             ),
 
-            // Medium icon
+            // Medium Palestine flag icon
             Image.network(
-              country.getEmojiUrl(EmojiSize.size48x36),
+              palestine.getEmojiUrl(EmojiSize.size48x36),
               width: 48,
               height: 36,
             ),
 
             // Large PNG for high quality
             Image.network(
-              country.getImageUrl(ImageSize.w160, ImageType.png),
+              palestine.getImageUrl(ImageSize.w160, ImageType.png),
               width: 160,
             ),
 
             // Compressed JPEG for performance
             Image.network(
-              country.getImageUrl(ImageSize.w160, ImageType.jpeg),
+              palestine.getImageUrl(ImageSize.w160, ImageType.jpeg),
               width: 160,
             ),
           ],
