@@ -9,6 +9,33 @@
 
 Perfect for building country selectors, phone number inputs, currency converters, and international applications targeting the Middle East and North Africa region.
 
+## 📑 Table of Contents
+
+- [✨ Features](#-features)
+- [🚀 Quick Start](#-quick-start)
+- [🏴 Flag System](#-flag-system)
+  - [Flag Formats](#flag-formats)
+  - [Available Sizes](#available-sizes)
+  - [Usage Examples](#usage-examples)
+- [📚 API Reference](#-api-reference)
+  - [Search Methods](#search-methods)
+  - [Data Collections](#data-collections)
+  - [Models](#models)
+- [💡 Usage Examples](#-usage-examples)
+  - [Country Selector](#country-selector)
+  - [Phone Number Input](#phone-number-input)
+  - [Flag Gallery](#flag-gallery)
+  - [Currency Display](#currency-display)
+  - [API Integration](#api-integration)
+- [🌍 Supported Countries](#-supported-countries)
+  - [Middle East (12 countries)](#middle-east-12-countries)
+  - [North Africa (7 countries)](#north-africa-7-countries)
+- [📱 Platform Support](#-platform-support)
+- [🤝 Contributing](#-contributing)
+- [📄 License](#-license)
+- [🔗 Links](#-links)
+- [⭐ Support](#-support)
+
 ## ✨ Features
 
 - 🌍 **Complete MENA Coverage**: 19 countries across Middle East and North Africa
