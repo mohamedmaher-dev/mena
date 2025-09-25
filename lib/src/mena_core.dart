@@ -17,8 +17,8 @@ part 'models/search_enum.dart';
 /// - [getByIndex]: Direct array access with bounds checking
 ///
 /// ## Data Collections:
-/// - [allCountries]: Complete list of all MENA countries (20 total)
-/// - [middleEast]: Middle Eastern countries only (13 countries)
+/// - [allCountries]: Complete list of all MENA countries (19 total)
+/// - [middleEast]: Middle Eastern countries only (12 countries)
 /// - [northernAfrica]: North African countries only (7 countries)
 ///
 /// ## Example Usage:
@@ -43,7 +43,7 @@ class MENA {
   /// Private constructor to prevent instantiation. All members are static.
   MENA._();
 
-  /// Complete list of all MENA countries (20 total).
+  /// Complete list of all MENA countries (19 total).
   ///
   /// This list combines both [middleEast] and [northernAfrica] collections.
   /// The list is immutable and safe to iterate over multiple times.
@@ -61,7 +61,7 @@ class MENA {
   /// These countries are generally considered part of the Maghreb and Nile Valley regions.
   static List<MenaItemModel> northernAfrica = MenaData.northAfricaCountries;
 
-  /// Middle Eastern countries only (13 countries).
+  /// Middle Eastern countries only (12 countries).
   ///
   /// **Countries included**: Saudi Arabia, UAE, Kuwait, Qatar, Bahrain, Oman,
   /// Jordan, Lebanon, Palestine, Iraq, Syria, Yemen.
@@ -74,10 +74,10 @@ class MENA {
   /// Returns the country at the specified [index] from [allCountries].
   ///
   /// **Parameters:**
-  /// - [index]: Zero-based index (0-19 for the 20 MENA countries)
+  /// - [index]: Zero-based index (0-18 for the 19 MENA countries)
   ///
   /// **Returns:** The [MenaItemModel] at the given index, or `null` if the
-  /// index is out of bounds (negative or >= 20).
+  /// index is out of bounds (negative or >= 19).
   ///
   /// **Example:**
   /// ```dart
@@ -103,7 +103,7 @@ class MENA {
   /// final invalid = MENA.getByCode('xyz');   // null
   /// ```
   ///
-  /// **Performance:** O(n) - linear search through 20 countries
+  /// **Performance:** O(n) - linear search through 19 countries
   static MenaItemModel? getByCode(String code) =>
       _getBy(code, _SearchEnum.code);
 
@@ -146,7 +146,7 @@ class MENA {
   ///
   /// **Use Case:** Perfect for phone number input validation and formatting.
   ///
-  /// **Performance:** O(n) - linear search through 20 countries
+  /// **Performance:** O(n) - linear search through 19 countries
   static MenaItemModel? getByDialCode(String dialCode) =>
       _getBy(dialCode, _SearchEnum.dialCode);
 
@@ -167,7 +167,7 @@ class MENA {
   ///
   /// **Use Case:** Useful for e-commerce, payment processing, and financial applications.
   ///
-  /// **Performance:** O(n) - linear search through 20 countries
+  /// **Performance:** O(n) - linear search through 19 countries
   static MenaItemModel? getByCurrencyCode(String currencyCode) =>
       _getBy(currencyCode, _SearchEnum.currency);
 

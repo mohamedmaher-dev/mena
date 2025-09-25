@@ -60,9 +60,9 @@ void _exploreDataCollections() {
   print('📊 Data Collections:');
   print('---------------------');
 
-  print('Total MENA Countries: ${MENA.allCountries.length}');
-  print('Middle East Countries: ${MENA.middleEast.length}');
-  print('North Africa Countries: ${MENA.northernAfrica.length}');
+  print('Total MENA Countries: ${MENA.allCountries.length}'); // 19
+  print('Middle East Countries: ${MENA.middleEast.length}'); // 12
+  print('North Africa Countries: ${MENA.northernAfrica.length}'); // 7
 
   // List all Middle East countries
   print('\nMiddle East Countries:');

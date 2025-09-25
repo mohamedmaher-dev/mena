@@ -11,7 +11,7 @@ Perfect for building country selectors, phone number inputs, currency converters
 
 ## ✨ Features
 
-- 🌍 **Complete MENA Coverage**: 20 countries across Middle East and North Africa
+- 🌍 **Complete MENA Coverage**: 19 countries across Middle East and North Africa
 - 🔍 **Multiple Search Methods**: Find by ISO code, name, dial code, or currency
 - 🌐 **Full Localization**: Arabic and English names (common + official)
 - 📱 **Zero Dependencies**: Pure Dart implementation, no external packages
@@ -60,14 +60,14 @@ void main() {
 | `getByName(String)`         | Find by English name (partial)  | `MENA.getByName('Emirates')`    |
 | `getByDialCode(String)`     | Find by international dial code | `MENA.getByDialCode('971')`     |
 | `getByCurrencyCode(String)` | Find by ISO 4217 currency code  | `MENA.getByCurrencyCode('AED')` |
-| `getByIndex(int)`           | Get by array index (0-19)       | `MENA.getByIndex(0)`            |
+| `getByIndex(int)`           | Get by array index (0-18)       | `MENA.getByIndex(0)`            |
 
 ### Data Collections
 
 | Collection            | Countries | Description                 |
 | --------------------- | --------- | --------------------------- |
-| `MENA.allCountries`   | 20        | All MENA countries combined |
-| `MENA.middleEast`     | 13        | Middle Eastern countries    |
+| `MENA.allCountries`   | 19        | All MENA countries combined |
+| `MENA.middleEast`     | 12        | Middle Eastern countries    |
 | `MENA.northernAfrica` | 7         | North African countries     |
 
 ### Models
@@ -220,7 +220,7 @@ Future<void> sendCountryData() async {
 
 ## 🌍 Supported Countries
 
-### Middle East (13 countries)
+### Middle East (12 countries)
 
 🇸🇦 Saudi Arabia • 🇦🇪 United Arab Emirates • 🇰🇼 Kuwait • 🇶🇦 Qatar • 🇧🇭 Bahrain • 🇴🇲 Oman • 🇯🇴 Jordan • 🇱🇧 Lebanon • 🇵🇸 Palestine • 🇮🇶 Iraq • 🇸🇾 Syria • 🇾🇪 Yemen
 

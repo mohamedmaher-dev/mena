@@ -4,7 +4,7 @@
 
 #### **Core Features**
 
-- **Complete MENA Dataset**: 20 countries across Middle East and North Africa regions
+- **Complete MENA Dataset**: 19 countries across Middle East and North Africa regions
 - **Multiple Search Methods**: Find countries by ISO code, name, dial code, or currency
 - **Localization Support**: Full Arabic and English names (common + official)
 - **Offline Operation**: No network calls required - all data bundled in package
@@ -19,8 +19,8 @@
 
 #### **Data Collections**
 
-- `MENA.allCountries`: Complete list (20 countries)
-- `MENA.middleEast`: Middle Eastern countries (13 countries)
+- `MENA.allCountries`: Complete list (19 countries)
+- `MENA.middleEast`: Middle Eastern countries (12 countries)
 - `MENA.northernAfrica`: North African countries (7 countries)
 
 #### **Search Methods**
@@ -29,7 +29,7 @@
 - `getByName(String)`: Partial English name matching
 - `getByDialCode(String)`: International dialing codes
 - `getByCurrencyCode(String)`: ISO 4217 currency codes
-- `getByIndex(int)`: Direct array access with bounds checking
+- `getByIndex(int)`: Direct array access with bounds checking (0-18)
 
 #### **Models**
 
@@ -45,7 +45,7 @@
 
 #### **Countries Included**
 
-**Middle East (13):**
+**Middle East (12):**
 Saudi Arabia, UAE, Kuwait, Qatar, Bahrain, Oman, Jordan, Lebanon, Palestine, Iraq, Syria, Yemen
 
 **North Africa (7):**
