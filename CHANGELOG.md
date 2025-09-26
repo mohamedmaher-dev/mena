@@ -14,27 +14,26 @@
 - **Advanced Flag System**: SVG, PNG (emoji-style), and JPEG/PNG with flexible sizing
 - **Zero Dependencies**: Pure Dart implementation, offline-first
 
-#### **🔍 Search Methods**
+#### **🔍 Unified Search Method**
 
-- **`getByCode(String)`**: ISO 3166-1 alpha-2 country codes
-- **`getByName(String)`**: Smart search that adapts to current locale
-- **`getByEnglishName(String)`**: Explicit English name search
-- **`getByArabicName(String)`**: Direct Arabic name search
-- **`getByDialCode(String)`**: International dialing codes
-- **`getByCurrencyCode(String)`**: ISO 4217 currency codes
-- **`getByIndex(int)`**: Direct array access (0-18)
+- **`getBy(query: String, key: MenaKeys)`**: Unified search with specific keys
+  - `MenaKeys.code`: ISO 3166-1 alpha-2 country codes
+  - `MenaKeys.englishName` / `MenaKeys.arabicName`: Country names
+  - `MenaKeys.dialCode`: International dialing codes
+  - `MenaKeys.currencyCode`: ISO 4217 currency codes
+  - `MenaKeys.capitalEn` / `MenaKeys.capitalAr`: Capital city names
+  - `MenaKeys.officalEn` / `MenaKeys.officalAr`: Official country names
 
 #### **🌐 Locale-Aware API**
 
-- **Country.getName / getOfficial / getCapital**: Locale-aware country names
-- **CurrencyType.getName**: Locale-aware currency type name
-- **Currency.getFullName / getSymbol**: Locale-aware currency name and symbol
+- **MenaItemModel.getCountryName / getOfficialName / getCapitalName**: Locale-aware country names
+- **MenaItemModel.getCurrencyName / getCurrencySymbol**: Locale-aware currency names and symbols
 
 #### **💰 Enhanced Currency System**
 
 - **Separate Symbols**: `englishSymbol` (ISO codes) and `arabicSymbol` (traditional symbols)
 - **Localized Names**: Full English and Arabic currency names
-- **Country Adjectives**: Clear `enAdjective`/`arAdjective` properties
+- **Country Adjectives**: Private `_enAdjective`/`_arAdjective` properties
 
 #### **📊 Data Collections**
 
@@ -46,8 +45,8 @@
 
 - **MenaItemModel**: Core country data with comprehensive flag URL support
 - **Country**: Localized names + metadata (`code`, `dialCode`, capitals)
-- **Currency**: Complete currency data with locale-aware getters
-- **CurrencyType**: Currency type classification with Arabic/English names
+- **Currency**: Complete currency data with English/Arabic symbols and names
+- **CurrencyType**: Currency type classification with `englishName`/`arabicName` properties
 
 #### **🌍 Countries Included**
 

@@ -74,23 +74,19 @@ import 'package:mena/mena.dart';
 
 void main() {
   // Find country by ISO code
-  final palestine = MENA.getByCode('ps');
+  final palestine = MENA.getBy(query: 'ps', key: MenaKeys.code);
   print(palestine?.country.englishName); // "Palestine"
   print(palestine?.country.arabicName);  // "فلسطين"
 
-  // Search by name (adapts to current locale - Arabic by default)
+  // Search by name
   final egypt = MENA.getBy(query: 'مصر', key: MenaKeys.arabicName); // Arabic search
   print(egypt?.currency.code); // "EGP"
 
   // Or search explicitly in English
   final egyptEn = MENA.getBy(query: 'Egypt', key: MenaKeys.englishName);
 
-  // Set locale to English for subsequent searches
-  MENA.setDefaultLocale('en');
-  final egyptLocalized = MENA.getBy(query: 'Egypt', key: MenaKeys.englishName);
-
   // Find by phone code
-  final palestineByPhone = MENA.getByDialCode('970');
+  final palestineByPhone = MENA.getBy(query: '970', key: MenaKeys.dialCode);
   print(palestineByPhone?.dialCodeWithPlus); // "+970"
 
   // Get Palestine flag URLs
@@ -139,7 +135,7 @@ MENA provides the most comprehensive flag system available for Dart packages, of
 ### Usage Examples
 
 ```dart
-final palestine = MENA.getByCode('ps');
+final palestine = MENA.getBy(query: 'ps', key: MenaKeys.code);
 
 // SVG flag (scalable)
 final svgFlag = palestine?.getSvgUrl;
@@ -209,7 +205,7 @@ class MenaItemModel {
   String getImageUrl(ImageSize, [ImageType]); // Flexible image with size and format
 
   // Locale-aware convenience proxies
-  String get getName;           // Country common name (locale-aware)
+  String get getCountryName;    // Country common name (locale-aware)
   String get getOfficialName;   // Country official name (locale-aware)
   String get getCapitalName;    // Country capital (locale-aware)
   String get getCurrencyName;   // Currency full name (locale-aware)
@@ -232,9 +228,7 @@ class Country {
   final String code;            // ISO 3166-1 alpha-2 (e.g., "ae")
   final String dialCode;        // Dial code without '+' (e.g., "971")
 
-  String get getName;           // Adapts to current locale
-  String get getOfficial;       // Adapts to current locale
-  String get getCapital;        // Adapts to current locale
+  // Note: Locale-aware getters are available in MenaItemModel
   Map<String, dynamic> toJson();
 }
 ```
@@ -278,16 +272,14 @@ enum ImageSize {
 ```dart
 class Currency {
   final String code;              // ISO 4217 code (e.g., "ILS", "AED")
-  final String enAdjective;       // Country adjective (e.g., "Egyptian", "Saudi")
-  final String arAdjective;       // Country adjective Arabic (e.g., "مصري", "سعودي")
+  final String _enAdjective;      // Country adjective (e.g., "Egyptian", "Saudi")
+  final String _arAdjective;      // Country adjective Arabic (e.g., "مصري", "سعودي")
   final CurrencyType type;        // Currency type classification
 
   String get fullEnglishName;     // Full English name (e.g., "Egyptian Pound")
   String get fullArabicName;      // Full Arabic name (e.g., "جنيه مصري")
-  String get getFullName;         // Adapts to current locale
-  String? get englishSymbol;      // English symbol (ISO code)
-  String? get arabicSymbol;       // Arabic symbol (e.g., "₪", "د.إ")
-  String? get getSymbol;          // Symbol adapts to current locale
+  String get englishSymbol;       // English symbol (ISO code)
+  String get arabicSymbol;        // Arabic symbol (e.g., "₪", "د.إ")
   Map<String, dynamic> toJson();  // JSON serialization
 }
 ```
@@ -298,10 +290,8 @@ class Currency {
 enum CurrencyType {
   dinar, riyal, dirham, pound, shekel, ouguiya;
 
-  String get enName;              // "Dinar", "Riyal", etc.
-  String get arName;              // "دينار", "ريال", etc. (Arabic)
-  String get getName;             // Adapts to current locale
-  String get bilingualName;       // "Dinar (دينار)"
+  String get englishName;         // "Dinar", "Riyal", etc.
+  String get arabicName;          // "دينار", "ريال", etc. (Arabic)
   List<String> get menaCurrencies; // Currency codes using this type
 }
 ```
@@ -365,7 +355,7 @@ class PhoneInput extends StatefulWidget {
 }
 
 class _PhoneInputState extends State<PhoneInput> {
-  MenaItemModel? selectedCountry = MENA.getByCode('ps'); // Default to Palestine
+  MenaItemModel? selectedCountry = MENA.getBy(query: 'ps', key: MenaKeys.code); // Default to Palestine
 
   @override
   Widget build(BuildContext context) {
@@ -409,7 +399,7 @@ import 'package:mena/mena.dart';
 class FlagGallery extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final palestine = MENA.getByCode('ps');
+    final palestine = MENA.getBy(query: 'ps', key: MenaKeys.code);
 
     return Column(
       children: [
@@ -468,16 +458,16 @@ void localeExamples() {
   // Default locale is Arabic
   print(MENA.defaultLocale); // 'ar'
 
-  final country = MENA.getByCode('ae');
-  print(country?.country.getName); // "الإمارات" (Arabic)
-  print(country?.country.getOfficial); // "الإمارات العربية المتحدة" (Arabic)
-  print(country?.country.getCapital); // "أبو ظبي" (Arabic)
+  final country = MENA.getBy(query: 'ae', key: MenaKeys.code);
+  print(country?.getCountryName); // "الإمارات" (Arabic)
+  print(country?.getOfficialName); // "الإمارات العربية المتحدة" (Arabic)
+  print(country?.getCapitalName); // "أبو ظبي" (Arabic)
 
   // Switch to English
   MENA.setDefaultLocale('en');
-  print(country?.country.getName); // "United Arab Emirates" (English)
-  print(country?.country.getOfficial); // "United Arab Emirates" (English)
-  print(country?.country.getCapital); // "Abu Dhabi" (English)
+  print(country?.getCountryName); // "United Arab Emirates" (English)
+  print(country?.getOfficialName); // "United Arab Emirates" (English)
+  print(country?.getCapitalName); // "Abu Dhabi" (English)
 
   // Search examples with keys
   final search1 = MENA.getBy(query: 'Egypt', key: MenaKeys.englishName);
@@ -495,14 +485,14 @@ void displayPrices() {
   final currencies = ['EGP', 'AED', 'SAR', 'ILS']; // Egypt first
 
   for (final currencyCode in currencies) {
-    final country = MENA.getByCurrencyCode(currencyCode);
+    final country = MENA.getBy(query: currencyCode, key: MenaKeys.currencyCode);
     if (country != null) {
       print('Currency: ${country.currency.code}');
       print('English: ${country.currency.fullEnglishName}');
       print('Arabic: ${country.currency.fullArabicName}');
       print('Localized: ${country.getCurrencyName}'); // Adapts to locale
-      print('Symbol: ${country.getCurrencySymbol ?? 'N/A'}'); // Adapts to locale
-      print('Country: ${country.country.getName}'); // Adapts to locale
+      print('Symbol: ${country.getCurrencySymbol}'); // Adapts to locale
+      print('Country: ${country.getCountryName}'); // Adapts to locale
       print('---');
     }
   }
@@ -510,7 +500,7 @@ void displayPrices() {
 
 // Advanced currency features
 void advancedCurrencyFeatures() {
-  final palestine = MENA.getByCode('ps');
+  final palestine = MENA.getBy(query: 'ps', key: MenaKeys.code);
 
   if (palestine != null) {
     final currency = palestine.currency;
@@ -520,22 +510,22 @@ void advancedCurrencyFeatures() {
     print('In Arabic: ١٠٠ ${currency.fullArabicName}');
 
     // Use symbol if available
-    final symbol = currency.getSymbol ?? currency.code;
+    final symbol = currency.arabicSymbol;
     print('With symbol: $symbol 100'); // "With symbol: ₪ 100"
 
     // Currency components and constructed names
-    print('Country adjective (EN): ${currency.enAdjective}');
-    print('Country adjective (AR): ${currency.arAdjective}');
-    print('Currency type (EN): ${currency.type.enName}');
-    print('Currency type (AR): ${currency.type.arName}');
+    print('Country adjective (EN): ${currency._enAdjective}'); // Note: private field
+    print('Country adjective (AR): ${currency._arAdjective}'); // Note: private field
+    print('Currency type (EN): ${currency.type.englishName}');
+    print('Currency type (AR): ${currency.type.arabicName}');
 
     // New convenient getters
     print('Full English name: ${currency.fullEnglishName}');
     print('Full Arabic name: ${currency.fullArabicName}');
 
     // Currency type analysis
-    print('Type: ${currency.type.enName}');
-    print('Type Arabic: ${currency.type.arName}');
+    print('Type: ${currency.type.englishName}');
+    print('Type Arabic: ${currency.type.arabicName}');
   }
 }
 
@@ -561,13 +551,13 @@ import 'package:mena/mena.dart';
 import 'dart:convert';
 
 Future<void> sendCountryData() async {
-  final country = MENA.getByCode('sa');
+  final country = MENA.getBy(query: 'sa', key: MenaKeys.code);
 
   if (country != null) {
     // Serialize for API
     final payload = {
       'user_country': country.toJson(),
-      'currency_preference': country.currency,
+      'currency_preference': country.currency.toJson(),
       'locale': 'ar_${country.country.code.toUpperCase()}',
     };
 
