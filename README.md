@@ -64,7 +64,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  mena: ^1.0.0
+  mena: ^1.0.1
 ```
 
 Import and use:
