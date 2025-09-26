@@ -34,7 +34,7 @@ export 'src/mena_core.dart';
 
 /// Models for MENA
 export 'src/models/mena_item_model.dart';
-export 'src/models/country_name.dart';
+export 'src/models/country.dart';
 export 'src/models/currency.dart';
 export 'src/models/currency_type.dart';
 export 'src/models/emoji_size.dart';

@@ -1,5 +1,4 @@
 import 'currency_type.dart';
-import '../mena_core.dart';
 
 /// Immutable data model representing a currency with localized names.
 ///
@@ -134,7 +133,7 @@ class Currency {
   /// final uaeCurrency = MENA.getByCode('ae')?.currency;
   /// print(uaeCurrency?.enName); // "Emirati Dirham"
   /// ```
-  String get fullEnglishName => '$enAdjective ${type.enName}';
+  String get fullEnglishName => '$enAdjective ${type.englishName}';
 
   /// Full Arabic currency name.
   ///
@@ -151,59 +150,7 @@ class Currency {
   /// final uaeCurrency = MENA.getByCode('ae')?.currency;
   /// print(uaeCurrency?.arName); // "درهم إماراتي"
   /// ```
-  String get fullArabicName => '${type.arName} $arAdjective';
-
-  /// Returns the full currency name based on the current default locale in MENA.
-  ///
-  /// **Returns:** The appropriate full name based on [MENA.defaultLocale]
-  /// - If locale is 'ar': returns [fullArabicName] (Arabic full name)
-  /// - If locale is 'en': returns [fullEnglishName] (English full name)
-  ///
-  /// **Example:**
-  /// ```dart
-  /// final currency = MENA.getByCode('ae')?.currency;
-  ///
-  /// // With Arabic locale (default)
-  /// print(MENA.defaultLocale); // 'ar'
-  /// print(currency?.getFullName); // "درهم إماراتي"
-  ///
-  /// // Switch to English locale
-  /// MENA.setDefaultLocale('en');
-  /// print(currency?.getFullName); // "Emirati Dirham"
-  /// ```
-  ///
-  /// **Use Cases:**
-  /// - Dynamic UI that adapts to current locale
-  /// - Internationalized financial applications
-  /// - User preference-based currency display
-  String get getFullName =>
-      MENA.defaultLocale == 'ar' ? fullArabicName : fullEnglishName;
-
-  /// Returns the currency symbol based on the current default locale in MENA.
-  ///
-  /// **Returns:** The appropriate symbol based on [MENA.defaultLocale]
-  /// - If locale is 'ar': returns [arabicSymbol] (Arabic symbol like "د.إ")
-  /// - If locale is 'en': returns [englishSymbol] (English symbol like "AED")
-  ///
-  /// **Example:**
-  /// ```dart
-  /// final currency = MENA.getByCode('ae')?.currency;
-  ///
-  /// // With Arabic locale (default)
-  /// print(MENA.defaultLocale); // 'ar'
-  /// print(currency?.getSymbol); // "د.إ"
-  ///
-  /// // Switch to English locale
-  /// MENA.setDefaultLocale('en');
-  /// print(currency?.getSymbol); // "AED"
-  /// ```
-  ///
-  /// **Use Cases:**
-  /// - Price display in e-commerce applications
-  /// - Financial dashboards
-  /// - Currency conversion interfaces
-  String? get getSymbol =>
-      MENA.defaultLocale == 'ar' ? arabicSymbol : englishSymbol;
+  String get fullArabicName => '${type.arabicName} $arAdjective';
 
   /// Returns the English currency symbol if commonly used.
   ///
@@ -214,7 +161,7 @@ class Currency {
   /// final aed = Currency(code: 'AED', enAdjective: 'Emirati', arAdjective: 'إماراتي');
   /// print(aed.englishSymbol); // "AED"
   /// ```
-  String? get englishSymbol => code;
+  String get englishSymbol => code;
 
   /// Returns the Arabic currency symbol if commonly used.
   ///
@@ -225,50 +172,28 @@ class Currency {
   /// final aed = Currency(code: 'AED', enAdjective: 'Emirati', arAdjective: 'إماراتي');
   /// print(aed.arabicSymbol); // "د.إ"
   /// ```
-  String? get arabicSymbol {
-    switch (code) {
-      case 'AED':
-        return 'د.إ';
-      case 'SAR':
-        return 'ر.س';
-      case 'EGP':
-        return 'ج.م';
-      case 'QAR':
-        return 'ر.ق';
-      case 'KWD':
-        return 'د.ك';
-      case 'BHD':
-        return 'د.ب';
-      case 'OMR':
-        return 'ر.ع';
-      case 'JOD':
-        return 'د.أ';
-      case 'LBP':
-        return 'ل.ل';
-      case 'ILS':
-        return '₪';
-      case 'TND':
-        return 'د.ت';
-      case 'DZD':
-        return 'د.ج';
-      case 'LYD':
-        return 'د.ل';
-      case 'MAD':
-        return 'د.م';
-      case 'IQD':
-        return 'د.ع';
-      case 'SYP':
-        return 'ل.س';
-      case 'SDG':
-        return 'ج.س';
-      case 'YER':
-        return 'ر.ي';
-      case 'MRU':
-        return 'أ.م';
-      default:
-        return null;
-    }
-  }
+  String get arabicSymbol => switch (code) {
+    'AED' => 'د.إ',
+    'SAR' => 'ر.س',
+    'EGP' => 'ج.م',
+    'QAR' => 'ر.ق',
+    'KWD' => 'د.ك',
+    'BHD' => 'د.ب',
+    'OMR' => 'ر.ع',
+    'JOD' => 'د.أ',
+    'LBP' => 'ل.ل',
+    'ILS' => '₪',
+    'TND' => 'د.ت',
+    'DZD' => 'د.ج',
+    'LYD' => 'د.ل',
+    'MAD' => 'د.م',
+    'IQD' => 'د.ع',
+    'SYP' => 'ل.س',
+    'SDG' => 'ج.س',
+    'YER' => 'ر.ي',
+    'MRU' => 'أ.م',
+    String() => throw UnimplementedError(),
+  };
 
   /// Serializes the currency to a JSON-compatible map.
   ///

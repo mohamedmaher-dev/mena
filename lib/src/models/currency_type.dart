@@ -1,5 +1,3 @@
-import '../mena_core.dart';
-
 /// Enumeration of currency types used in the MENA region.
 ///
 /// This enum categorizes currencies by their type/denomination, providing
@@ -100,7 +98,7 @@ enum CurrencyType {
   ouguiya('Ouguiya', 'أوقية');
 
   /// Creates a [CurrencyType] with the specified names.
-  const CurrencyType(this.enName, this.arName);
+  const CurrencyType(this.englishName, this.arabicName);
 
   /// Primary English name of the currency type.
   ///
@@ -114,7 +112,7 @@ enum CurrencyType {
   /// - "Pound" (weight-based system)
   /// - "Shekel" (ancient currency)
   /// - "Ouguiya" (unique non-decimal)
-  final String enName;
+  final String englishName;
 
   /// Arabic name of the currency type.
   ///
@@ -128,33 +126,7 @@ enum CurrencyType {
   /// - "جنيه" (Pound/Gineh)
   /// - "شيكل" (Shekel)
   /// - "أوقية" (Ouguiya)
-  final String arName;
-
-  /// Returns the currency type name based on the current default locale in MENA.
-  ///
-  /// **Returns:** The appropriate name based on [MENA.defaultLocale]
-  /// - If locale is 'ar': returns [arName] (Arabic name)
-  /// - If locale is 'en': returns [enName] (English name)
-  ///
-  /// **Example:**
-  /// ```dart
-  /// final currency = MENA.getByCode('ae')?.currency;
-  /// final type = currency?.type;
-  ///
-  /// // With Arabic locale (default)
-  /// print(MENA.defaultLocale); // 'ar'
-  /// print(type?.getName); // "درهم"
-  ///
-  /// // Switch to English locale
-  /// MENA.setDefaultLocale('en');
-  /// print(type?.getName); // "Dirham"
-  /// ```
-  ///
-  /// **Use Cases:**
-  /// - Dynamic UI that adapts to current locale
-  /// - Internationalized financial applications
-  /// - User preference-based currency display
-  String get getName => MENA.defaultLocale == 'ar' ? arName : enName;
+  final String arabicName;
 
   /// Returns currencies of this type used in MENA region.
   ///
@@ -180,15 +152,6 @@ enum CurrencyType {
     }
   }
 
-  /// Returns both English and Arabic names.
-  ///
-  /// **Example:**
-  /// ```dart
-  /// print(CurrencyType.dinar.bilingualName); // "Dinar (دينار)"
-  /// print(CurrencyType.riyal.bilingualName); // "Riyal (ريال)"
-  /// ```
-  String get bilingualName => '$enName ($arName)';
-
   @override
-  String toString() => 'CurrencyType.$name ($enName)';
+  String toString() => 'CurrencyType.$name ($englishName)';
 }

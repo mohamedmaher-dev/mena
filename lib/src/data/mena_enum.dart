@@ -1,1 +1,0 @@
-enum MenaEnum { egypt }

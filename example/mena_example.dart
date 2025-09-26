@@ -32,25 +32,25 @@ void _demonstrateSearchMethods() {
 
   // 1. Search by ISO country code
   final palestine = MENA.getByCode('ps');
-  print('By Code (ps): ${palestine?.countryName.englishName}');
+  print('By Code (ps): ${palestine?.country.englishName}');
 
   // 2. Search by English name (partial matching)
   final morocco = MENA.getByName('Morocco');
-  print('By Name (Morocco): ${morocco?.countryName.officalEN}');
+  print('By Name (Morocco): ${morocco?.country.officalEN}');
 
   // 3. Search by international dial code
   final uae = MENA.getByDialCode('971');
   print(
-    'By Dial Code (971): ${uae?.countryName.englishName} - Currency: ${uae?.currency}',
+    'By Dial Code (971): ${uae?.country.englishName} - Currency: ${uae?.currency}',
   );
 
   // 4. Search by currency code
   final saudi = MENA.getByCurrencyCode('SAR');
-  print('By Currency (SAR): ${saudi?.countryName.englishName}');
+  print('By Currency (SAR): ${saudi?.country.englishName}');
 
   // 5. Direct index access
   final firstCountry = MENA.getByIndex(0);
-  print('By Index (0): ${firstCountry?.countryName.englishName}');
+  print('By Index (0): ${firstCountry?.country.englishName}');
 
   print('');
 }
@@ -67,13 +67,13 @@ void _exploreDataCollections() {
   // List all Middle East countries
   print('\nMiddle East Countries:');
   for (final country in MENA.middleEast) {
-    print('  • ${country.countryName.englishName} (+${country.dialCode})');
+    print('  • ${country.country.englishName} (+${country.country.dialCode})');
   }
 
   // List all North Africa countries
   print('\nNorth Africa Countries:');
   for (final country in MENA.northernAfrica) {
-    print('  • ${country.countryName.englishName} (${country.currency})');
+    print('  • ${country.country.englishName} (${country.currency})');
   }
 
   print('');
@@ -86,11 +86,11 @@ void _demonstrateLocalization() {
 
   final palestine = MENA.getByCode('ps');
   if (palestine != null) {
-    print('Country: ${palestine.code.toUpperCase()} (Palestine)');
-    print('English Common: ${palestine.countryName.englishName}');
-    print('English Official: ${palestine.countryName.officalEN}');
-    print('Arabic Common: ${palestine.countryName.arabicName}'); // فلسطين
-    print('Arabic Official: ${palestine.countryName.officalAR}'); // دولة فلسطين
+    print('Country: ${palestine.country.code.toUpperCase()} (Palestine)');
+    print('English Common: ${palestine.country.englishName}');
+    print('English Official: ${palestine.country.officalEN}');
+    print('Arabic Common: ${palestine.country.arabicName}'); // فلسطين
+    print('Arabic Official: ${palestine.country.officalAR}'); // دولة فلسطين
     print('Palestine Flag URL: ${palestine.getSvgUrl}');
     print(
       'Small Palestine Emoji (24x18): ${palestine.getEmojiUrl(EmojiSize.size24x18)}',
@@ -136,7 +136,7 @@ void _practicalUseCases() {
     print('  International: $international');
     print('  Formatted Code: ${phoneCountry.dialCodeWithPlus}');
     print(
-      '  Country: ${phoneCountry.countryName.englishName} (${phoneCountry.countryName.arabicName})',
+      '  Country: ${phoneCountry.country.englishName} (${phoneCountry.country.arabicName})',
     );
   }
 
@@ -158,7 +158,7 @@ void _practicalUseCases() {
   final apiCountry = MENA.getByCode('ps');
   if (apiCountry != null) {
     final json = apiCountry.toJson();
-    print('  API Payload for ${apiCountry.countryName.englishName}:');
+    print('  API Payload for ${apiCountry.country.englishName}:');
     print('  {');
     print('    "code": "${json['code']}"');
     print('    "currency": {');
@@ -194,7 +194,7 @@ void _errorHandlingExamples() {
 
   // Safe property access
   final safeExample = MENA.getByCode('eg');
-  final safeName = safeExample?.countryName.englishName ?? 'Unknown Country';
+  final safeName = safeExample?.country.englishName ?? 'Unknown Country';
   final safeCurrency = safeExample?.currency ?? 'N/A';
   print('  Safe access: $safeName uses $safeCurrency');
 

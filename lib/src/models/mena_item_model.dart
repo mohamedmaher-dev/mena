@@ -1,8 +1,4 @@
-import 'country_name.dart';
-import 'currency.dart';
-import 'emoji_size.dart';
-import 'image_size.dart';
-import 'image_type.dart';
+import '../../mena.dart';
 
 /// Immutable data model representing a MENA country with complete metadata.
 ///
@@ -19,7 +15,7 @@ import 'image_type.dart';
 /// ```dart
 /// final country = MENA.getByCode('ae');
 /// if (country != null) {
-///   print('Country: ${country.countryName.en}');           // "United Arab Emirates"
+///   print('Country: ${country.country.getName}');           // localized name
 ///   print('Currency: ${country.currency}');                // "AED"
 ///   print('Phone: +${country.dialCode}');                  // "+971"
 ///   print('Flag: ${country.getSvgUrl}');                   // SVG flag URL
@@ -43,12 +39,10 @@ class MenaItemModel {
   /// **Example:**
   /// ```dart
   /// final country = MENA.getByCode('ae');
-  /// print(country?.countryName.en);        // "United Arab Emirates"
-  /// print(country?.countryName.ar);        // "الإمارات"
-  /// print(country?.countryName.officalEN); // "United Arab Emirates"
-  /// print(country?.countryName.officalAR); // "الإمارات العربية المتحدة"
+  /// print(country?.country.getName);        // localized common name
+  /// print(country?.country.getOfficial);    // localized official name
   /// ```
-  final CountryName countryName;
+  final Country country;
 
   /// Currency information with localized names and symbols.
   ///
@@ -73,65 +67,176 @@ class MenaItemModel {
   /// ```
   final Currency currency;
 
-  /// International dialing code without the leading '+' symbol.
-  ///
-  /// Used for international phone number formatting and validation.
-  /// Always numeric and represents the country calling code.
-  ///
-  /// **Example:**
-  /// ```dart
-  /// final country = MENA.getByCode('ae');
-  /// final phoneNumber = '+${country?.dialCode}501234567'; // "+971501234567"
-  /// ```
-  ///
-  /// **Note:** For display purposes, you typically want to add the '+' prefix.
-  final String dialCode;
-
-  /// ISO 3166-1 alpha-2 country code in lowercase.
-  ///
-  /// Two-letter country code following international standards.
-  /// Used for flag URLs, locale identification, and international systems.
-  ///
-  /// **Example:**
-  /// ```dart
-  /// final country = MENA.getByCode('ae');
-  /// print('Code: ${country?.code}'); // "ae"
-  /// ```
-  ///
-  /// **Standards Compliance:** Follows ISO 3166-1 alpha-2 specification.
-  final String code;
-
   /// Creates a new immutable [MenaItemModel] instance.
   ///
   /// All parameters are required and must not be null. Once created,
   /// the instance cannot be modified (immutable).
   ///
   /// **Parameters:**
-  /// - [countryName]: Localized names for the country
+  /// - [country]: Localized names for the country
   /// - [currency]: ISO 4217 currency code (3 letters, uppercase)
-  /// - [dialCode]: International dialing code (numeric, no '+' prefix)
-  /// - [code]: ISO 3166-1 alpha-2 country code (2 letters, lowercase)
   ///
   /// **Example:**
   /// ```dart
-  /// const country = MenaItemModel(
-  ///   countryName: CountryName(
-  ///     en: 'United Arab Emirates',
-  ///     ar: 'الإمارات',
-  ///     officalEN: 'United Arab Emirates',
-  ///     officalAR: 'الإمارات العربية المتحدة',
-  ///   ),
-  ///   currency: 'AED',
-  ///   dialCode: '971',
-  ///   code: 'ae',
+  /// final country = MENA.getByCode('ae');
+  /// final currency = MENA.getByCode('ae')?.currency;
+  /// final menaItemModel = MenaItemModel(
+  ///   country: country,
+  ///   currency: currency,
   /// );
   /// ```
-  const MenaItemModel({
-    required this.countryName,
-    required this.currency,
-    required this.dialCode,
-    required this.code,
-  });
+  const MenaItemModel({required this.country, required this.currency});
+
+  /// Returns the country name based on the current default locale in MENA.
+  ///
+  /// **Returns:** The appropriate common name based on [MENA.defaultLocale]
+  /// - If locale is 'ar': returns [arabicName] (Arabic common name)
+  /// - If locale is 'en': returns [englishName] (English common name)
+  ///
+  /// **Example:**
+  /// ```dart
+  /// final country = MENA.getByCode('ae');
+  /// final names = country?.countryName;
+  ///
+  /// // With Arabic locale (default)
+  /// print(MENA.defaultLocale); // 'ar'
+  /// print(names?.getName); // "الإمارات"
+  ///
+  /// // Switch to English locale
+  /// MENA.setDefaultLocale('en');
+  /// print(names?.getName); // "United Arab Emirates"
+  /// ```
+  ///
+  /// **Use Cases:**
+  /// - Dynamic UI that adapts to current locale
+  /// - Internationalized applications
+  /// - User preference-based display
+  ///
+  /// @since 1.0.0
+  String get getName => _getValueByLocal(
+    arabicValue: country.arabicName,
+    englishValue: country.englishName,
+  );
+
+  /// Returns the official country name based on the current default locale in MENA.
+  ///
+  /// **Returns:** The appropriate official name based on [MENA.defaultLocale]
+  /// - If locale is 'ar': returns [officalAR] (Arabic official name)
+  /// - If locale is 'en': returns [officalEN] (English official name)
+  ///
+  /// **Example:**
+  /// ```dart
+  /// final country = MENA.getByCode('ae');
+  /// final names = country?.countryName;
+  ///
+  /// // With Arabic locale (default)
+  /// print(MENA.defaultLocale); // 'ar'
+  /// print(names?.getOfficial); // "الإمارات العربية المتحدة"
+  ///
+  /// // Switch to English locale
+  /// MENA.setDefaultLocale('en');
+  /// print(names?.getOfficial); // "United Arab Emirates"
+  /// ```
+  ///
+  /// **Use Cases:**
+  /// - Official documents and forms
+  /// - Government applications
+  /// - Legal documentation
+  /// - Formal communications
+  ///
+  /// @since 1.0.0
+  String get getOfficialName => _getValueByLocal(
+    arabicValue: country.officalAR,
+    englishValue: country.officalEN,
+  );
+
+  /// Returns the capital city name based on the current default locale in MENA.
+  ///
+  /// **Returns:** The appropriate capital name based on [MENA.defaultLocale]
+  /// - If locale is 'ar': returns [arabicCapital] (Arabic capital name)
+  /// - If locale is 'en': returns [englishCapital] (English capital name)
+  ///
+  /// **Example:**
+  /// ```dart
+  /// final country = MENA.getByCode('ae');
+  /// final names = country?.countryName;
+  ///
+  /// // With Arabic locale (default)
+  /// print(MENA.defaultLocale); // 'ar'
+  /// print(names?.getCapital); // "أبو ظبي"
+  ///
+  /// // Switch to English locale
+  /// MENA.setDefaultLocale('en');
+  /// print(names?.getCapital); // "Abu Dhabi"
+  /// ```
+  ///
+  /// **Use Cases:**
+  /// - Geographic information displays
+  /// - Educational applications
+  /// - Travel and tourism interfaces
+  /// - Location-based services
+  ///
+  /// @since 1.0.0
+  String get getCapitalName => _getValueByLocal(
+    arabicValue: country.arabicCapital,
+    englishValue: country.englishCapital,
+  );
+
+  /// Returns the full currency name based on the current default locale in MENA.
+  ///
+  /// **Returns:** The appropriate full name based on [MENA.defaultLocale]
+  /// - If locale is 'ar': returns [fullArabicName] (Arabic full name)
+  /// - If locale is 'en': returns [fullEnglishName] (English full name)
+  ///
+  /// **Example:**
+  /// ```dart
+  /// final currency = MENA.getByCode('ae')?.currency;
+  ///
+  /// // With Arabic locale (default)
+  /// print(MENA.defaultLocale); // 'ar'
+  /// print(currency?.getFullName); // "درهم إماراتي"
+  ///
+  /// // Switch to English locale
+  /// MENA.setDefaultLocale('en');
+  /// print(currency?.getFullName); // "Emirati Dirham"
+  /// ```
+  ///
+  /// **Use Cases:**
+  /// - Dynamic UI that adapts to current locale
+  /// - Internationalized financial applications
+  /// - User preference-based currency display
+  String get getCurrencyName => _getValueByLocal(
+    arabicValue: currency.fullArabicName,
+    englishValue: currency.fullEnglishName,
+  );
+
+  /// Returns the currency symbol based on the current default locale in MENA.
+  ///
+  /// **Returns:** The appropriate symbol based on [MENA.defaultLocale]
+  /// - If locale is 'ar': returns [arabicSymbol] (Arabic symbol like "د.إ")
+  /// - If locale is 'en': returns [englishSymbol] (English symbol like "AED")
+  ///
+  /// **Example:**
+  /// ```dart
+  /// final currency = MENA.getByCode('ae')?.currency;
+  ///
+  /// // With Arabic locale (default)
+  /// print(MENA.defaultLocale); // 'ar'
+  /// print(currency?.getSymbol); // "د.إ"
+  ///
+  /// // Switch to English locale
+  /// MENA.setDefaultLocale('en');
+  /// print(currency?.getSymbol); // "AED"
+  /// ```
+  ///
+  /// **Use Cases:**
+  /// - Price display in e-commerce applications
+  /// - Financial dashboards
+  /// - Currency conversion interfaces
+  String get getCurrencySymbol => _getValueByLocal(
+    arabicValue: currency.arabicSymbol,
+    englishValue: currency.englishSymbol,
+  );
 
   /// International dialing code with leading '+' symbol.
   ///
@@ -149,7 +254,7 @@ class MenaItemModel {
   /// Text('Call: ${country?.dialCodeWithPlus} 501234567');
   ///
   /// // Use in dropdown:
-  /// Text('${country?.dialCodeWithPlus} ${country?.countryName.en}');
+  /// Text('${country?.dialCodeWithPlus} ${country?.country.getName}');
   /// ```
   ///
   /// **Use Cases:**
@@ -157,7 +262,7 @@ class MenaItemModel {
   /// - Country code dropdowns and selectors
   /// - International contact forms
   /// - Call-to-action buttons with phone numbers
-  String get dialCodeWithPlus => '+$dialCode';
+  String get dialCodeWithPlus => '+${country.dialCode}';
 
   /// High-quality SVG flag URL provided by flagcdn.com.
   ///
@@ -180,7 +285,7 @@ class MenaItemModel {
   ///
   /// **Note:** For specific sizes, use [getEmojiUrl] with [EmojiSize] enum.
   /// Check [flagcdn.com](https://flagcdn.com) for more information.
-  String get getSvgUrl => 'https://flagcdn.com/$code.svg';
+  String get getSvgUrl => 'https://flagcdn.com/${country.code}.svg';
 
   /// Returns an emoji flag URL with the specified [size].
   ///
@@ -216,7 +321,7 @@ class MenaItemModel {
   ///
   /// **URL Format:** `https://flagcdn.com/{dimensions}/{countryCode}.png`
   String getEmojiUrl(EmojiSize size) =>
-      'https://flagcdn.com/${size.dimensions}/$code.png';
+      'https://flagcdn.com/${size.dimensions}/${country.code}.png';
 
   /// Returns an image flag URL with the specified [size] and [type].
   ///
@@ -254,11 +359,41 @@ class MenaItemModel {
   ///
   /// **URL Format:** `https://flagcdn.com/{sizeParam}/{countryCode}.{extension}`
   String getImageUrl(ImageSize size, [ImageType type = ImageType.jpeg]) =>
-      'https://flagcdn.com/${size.sizeParam}/$code.${type.extension}';
+      'https://flagcdn.com/${size.sizeParam}/${country.code}.${type.extension}';
 
+  /// Returns a string representation of the [MenaItemModel].
+  ///
+  /// **Returns:** A string representation of the [MenaItemModel]
+  ///
+  /// **Example:**
+  /// ```dart
+  /// final country = MENA.getByCode('ae');
+  /// print(country?.toString()); // "Country{country: Country{en: United Arab Emirates, ar: الإمارات, officalEN: United Arab Emirates, officalAR: الإمارات العربية المتحدة}, currency: Currency{code: AED, en: Emirati, ar: إماراتي, symbol: د.إ}}"
+  /// ```
   @override
   String toString() =>
-      'Country{countryName: ${countryName.toString()}, currency: $currency, dialCode: $dialCode, code: $code}';
+      'Country{country: ${country.toString()}, currency: $currency}';
+
+  /// Returns the value based on the current default locale in MENA.
+  ///
+  /// **Returns:** The appropriate value based on [MENA.defaultLocale]
+  /// - If locale is 'ar': returns [arabicValue] (Arabic value)
+  /// - If locale is 'en': returns [englishValue] (English value)
+  ///
+  /// **Example:**
+  /// ```dart
+  /// final country = MENA.getByCode('ae');
+  /// final name = country?.getName; // "United Arab Emirates"
+  /// ```
+  ///
+  /// **Use Cases:**
+  /// - Dynamic UI that adapts to current locale
+  /// - Internationalized applications
+  /// - User preference-based display
+  ///
+  /// @since 1.0.0
+  T _getValueByLocal<T>({required T arabicValue, required T englishValue}) =>
+      MENA.defaultLocale == 'ar' ? arabicValue : englishValue;
 
   /// Serializes this model to a JSON-compatible map.
   ///
@@ -274,7 +409,7 @@ class MenaItemModel {
   ///
   /// // Result:
   /// // {
-  /// //   'countryName': {
+  /// //   'country': {
   /// //     'en': 'United Arab Emirates',
   /// //     'ar': 'الإمارات',
   /// //     'officalEN': 'United Arab Emirates',
@@ -295,26 +430,35 @@ class MenaItemModel {
   /// - State management serialization
   /// - Data export functionality
   Map<String, dynamic> toJson() => {
-    'countryName': countryName.toJson(),
+    'country': country.toJson(),
     'currency': currency.toJson(),
-    'dialCode': dialCode,
-    'code': code,
   };
 
+  /// Returns true if this [MenaItemModel] is equal to another [MenaItemModel].
+  ///
+  /// **Returns:** True if the [MenaItemModel]s are equal, false otherwise
+  ///
+  /// **Example:**
+  /// ```dart
+  /// final country = MENA.getByCode('ae');
+  /// final other = MENA.getByCode('ae');
+  /// print(country == other); // true
+  /// ```
+  ///
+  /// **Use Cases:**
+  /// - Equality checks in tests
+  /// - Data integrity checks
+  /// - Performance optimization
+  ///
+  /// @since 1.0.0
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is MenaItemModel &&
           runtimeType == other.runtimeType &&
-          countryName == other.countryName &&
-          currency == other.currency &&
-          dialCode == other.dialCode &&
-          code == other.code;
+          country == other.country &&
+          currency == other.currency;
 
   @override
-  int get hashCode =>
-      countryName.hashCode ^
-      currency.hashCode ^
-      dialCode.hashCode ^
-      code.hashCode;
+  int get hashCode => country.hashCode ^ currency.hashCode;
 }
