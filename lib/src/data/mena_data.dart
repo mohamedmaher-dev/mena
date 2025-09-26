@@ -10,15 +10,15 @@ class MenaData {
   static final List<MenaItemModel> northAfricaCountries = const [
     MenaItemModel(
       countryName: CountryName(
-        ar: 'مصر',
-        en: 'Egypt',
+        arabicName: 'مصر',
+        englishName: 'Egypt',
         officalAR: 'جمهورية مصر العربية',
         officalEN: 'Arab Republic of Egypt',
       ),
       currency: Currency(
         code: 'EGP',
-        en: 'Egyptian',
-        ar: 'مصري',
+        enAdjective: 'Egyptian',
+        arAdjective: 'مصري',
         type: CurrencyType.pound,
       ),
       dialCode: '20',
@@ -26,15 +26,15 @@ class MenaData {
     ),
     MenaItemModel(
       countryName: CountryName(
-        ar: 'السودان',
-        en: 'Sudan',
+        arabicName: 'السودان',
+        englishName: 'Sudan',
         officalAR: 'جمهورية السودان',
         officalEN: 'Republic of the Sudan',
       ),
       currency: Currency(
         code: 'SDG',
-        en: 'Sudanese',
-        ar: 'سوداني',
+        enAdjective: 'Sudanese',
+        arAdjective: 'سوداني',
         type: CurrencyType.pound,
       ),
       dialCode: '249',
@@ -42,15 +42,15 @@ class MenaData {
     ),
     MenaItemModel(
       countryName: CountryName(
-        ar: 'ليبيا',
-        en: 'Libya',
+        arabicName: 'ليبيا',
+        englishName: 'Libya',
         officalAR: 'دولة ليبيا',
         officalEN: 'State of Libya',
       ),
       currency: Currency(
         code: 'LYD',
-        en: 'Libyan',
-        ar: 'ليبي',
+        enAdjective: 'Libyan',
+        arAdjective: 'ليبي',
         type: CurrencyType.dinar,
       ),
       dialCode: '218',
@@ -58,15 +58,15 @@ class MenaData {
     ),
     MenaItemModel(
       countryName: CountryName(
-        ar: 'تونس',
-        en: 'Tunisia',
+        arabicName: 'تونس',
+        englishName: 'Tunisia',
         officalAR: 'الجمهورية التونسية',
         officalEN: 'Republic of Tunisia',
       ),
       currency: Currency(
         code: 'TND',
-        en: 'Tunisian',
-        ar: 'تونسي',
+        enAdjective: 'Tunisian',
+        arAdjective: 'تونسي',
         type: CurrencyType.dinar,
       ),
       dialCode: '216',
@@ -74,15 +74,15 @@ class MenaData {
     ),
     MenaItemModel(
       countryName: CountryName(
-        ar: 'الجزائر',
-        en: 'Algeria',
+        arabicName: 'الجزائر',
+        englishName: 'Algeria',
         officalAR: 'الجمهورية الجزائرية الديمقراطية الشعبية',
         officalEN: "People's Democratic Republic of Algeria",
       ),
       currency: Currency(
         code: 'DZD',
-        en: 'Algerian',
-        ar: 'جزائري',
+        enAdjective: 'Algerian',
+        arAdjective: 'جزائري',
         type: CurrencyType.dinar,
       ),
       dialCode: '213',
@@ -90,15 +90,15 @@ class MenaData {
     ),
     MenaItemModel(
       countryName: CountryName(
-        ar: 'المغرب',
-        en: 'Morocco',
+        arabicName: 'المغرب',
+        englishName: 'Morocco',
         officalAR: 'المملكة المغربية',
         officalEN: 'Kingdom of Morocco',
       ),
       currency: Currency(
         code: 'MAD',
-        en: 'Moroccan',
-        ar: 'مغربي',
+        enAdjective: 'Moroccan',
+        arAdjective: 'مغربي',
         type: CurrencyType.dirham,
       ),
       dialCode: '212',
@@ -106,15 +106,15 @@ class MenaData {
     ),
     MenaItemModel(
       countryName: CountryName(
-        ar: 'موريتانيا',
-        en: 'Mauritania',
+        arabicName: 'موريتانيا',
+        englishName: 'Mauritania',
         officalAR: 'الجمهورية الإسلامية الموريتانية',
         officalEN: 'Islamic Republic of Mauritania',
       ),
       currency: Currency(
         code: 'MRU',
-        en: 'Mauritanian',
-        ar: 'موريتانية',
+        enAdjective: 'Mauritanian',
+        arAdjective: 'موريتانية',
         type: CurrencyType.ouguiya,
       ),
       dialCode: '222',
@@ -125,15 +125,15 @@ class MenaData {
   static final List<MenaItemModel> middleEastCountries = const [
     MenaItemModel(
       countryName: CountryName(
-        ar: 'السعودية',
-        en: 'Saudi Arabia',
+        arabicName: 'السعودية',
+        englishName: 'Saudi Arabia',
         officalAR: 'المملكة العربية السعودية',
         officalEN: 'Kingdom of Saudi Arabia',
       ),
       currency: Currency(
         code: 'SAR',
-        en: 'Saudi',
-        ar: 'سعودي',
+        enAdjective: 'Saudi',
+        arAdjective: 'سعودي',
         type: CurrencyType.riyal,
       ),
       dialCode: '966',
@@ -141,15 +141,15 @@ class MenaData {
     ),
     MenaItemModel(
       countryName: CountryName(
-        ar: 'الإمارات',
-        en: 'United Arab Emirates',
+        arabicName: 'الإمارات',
+        englishName: 'United Arab Emirates',
         officalAR: 'الإمارات العربية المتحدة',
         officalEN: 'United Arab Emirates',
       ),
       currency: Currency(
         code: 'AED',
-        en: 'Emirati',
-        ar: 'إماراتي',
+        enAdjective: 'Emirati',
+        arAdjective: 'إماراتي',
         type: CurrencyType.dirham,
       ),
       dialCode: '971',
@@ -157,15 +157,15 @@ class MenaData {
     ),
     MenaItemModel(
       countryName: CountryName(
-        ar: 'الكويت',
-        en: 'Kuwait',
+        arabicName: 'الكويت',
+        englishName: 'Kuwait',
         officalAR: 'دولة الكويت',
         officalEN: 'State of Kuwait',
       ),
       currency: Currency(
         code: 'KWD',
-        en: 'Kuwaiti',
-        ar: 'كويتي',
+        enAdjective: 'Kuwaiti',
+        arAdjective: 'كويتي',
         type: CurrencyType.dinar,
       ),
       dialCode: '965',
@@ -173,15 +173,15 @@ class MenaData {
     ),
     MenaItemModel(
       countryName: CountryName(
-        ar: 'قطر',
-        en: 'Qatar',
+        arabicName: 'قطر',
+        englishName: 'Qatar',
         officalAR: 'دولة قطر',
         officalEN: 'State of Qatar',
       ),
       currency: Currency(
         code: 'QAR',
-        en: 'Qatari',
-        ar: 'قطري',
+        enAdjective: 'Qatari',
+        arAdjective: 'قطري',
         type: CurrencyType.riyal,
       ),
       dialCode: '974',
@@ -189,15 +189,15 @@ class MenaData {
     ),
     MenaItemModel(
       countryName: CountryName(
-        ar: 'البحرين',
-        en: 'Bahrain',
+        arabicName: 'البحرين',
+        englishName: 'Bahrain',
         officalAR: 'مملكة البحرين',
         officalEN: 'Kingdom of Bahrain',
       ),
       currency: Currency(
         code: 'BHD',
-        en: 'Bahraini',
-        ar: 'بحريني',
+        enAdjective: 'Bahraini',
+        arAdjective: 'بحريني',
         type: CurrencyType.dinar,
       ),
       dialCode: '973',
@@ -205,15 +205,15 @@ class MenaData {
     ),
     MenaItemModel(
       countryName: CountryName(
-        ar: 'عُمان',
-        en: 'Oman',
+        arabicName: 'عُمان',
+        englishName: 'Oman',
         officalAR: 'سلطنة عُمان',
         officalEN: 'Sultanate of Oman',
       ),
       currency: Currency(
         code: 'OMR',
-        en: 'Omani',
-        ar: 'عماني',
+        enAdjective: 'Omani',
+        arAdjective: 'عماني',
         type: CurrencyType.riyal,
       ),
       dialCode: '968',
@@ -221,15 +221,15 @@ class MenaData {
     ),
     MenaItemModel(
       countryName: CountryName(
-        ar: 'الأردن',
-        en: 'Jordan',
+        arabicName: 'الأردن',
+        englishName: 'Jordan',
         officalAR: 'المملكة الأردنية الهاشمية',
         officalEN: 'Hashemite Kingdom of Jordan',
       ),
       currency: Currency(
         code: 'JOD',
-        en: 'Jordanian',
-        ar: 'أردني',
+        enAdjective: 'Jordanian',
+        arAdjective: 'أردني',
         type: CurrencyType.dinar,
       ),
       dialCode: '962',
@@ -237,15 +237,15 @@ class MenaData {
     ),
     MenaItemModel(
       countryName: CountryName(
-        ar: 'لبنان',
-        en: 'Lebanon',
+        arabicName: 'لبنان',
+        englishName: 'Lebanon',
         officalAR: 'الجمهورية اللبنانية',
         officalEN: 'Lebanese Republic',
       ),
       currency: Currency(
         code: 'LBP',
-        en: 'Lebanese',
-        ar: 'لبنانية',
+        enAdjective: 'Lebanese',
+        arAdjective: 'لبنانية',
         type: CurrencyType.pound,
       ),
       dialCode: '961',
@@ -253,15 +253,15 @@ class MenaData {
     ),
     MenaItemModel(
       countryName: CountryName(
-        ar: 'فلسطين',
-        en: 'Palestine',
+        arabicName: 'فلسطين',
+        englishName: 'Palestine',
         officalAR: 'دولة فلسطين',
         officalEN: 'State of Palestine',
       ),
       currency: Currency(
         code: 'ILS',
-        en: 'Palestinian',
-        ar: 'فلسطيني',
+        enAdjective: 'Palestinian',
+        arAdjective: 'فلسطيني',
         type: CurrencyType.shekel,
       ),
       dialCode: '970',
@@ -269,15 +269,15 @@ class MenaData {
     ),
     MenaItemModel(
       countryName: CountryName(
-        ar: 'العراق',
-        en: 'Iraq',
+        arabicName: 'العراق',
+        englishName: 'Iraq',
         officalAR: 'جمهورية العراق',
         officalEN: 'Republic of Iraq',
       ),
       currency: Currency(
         code: 'IQD',
-        en: 'Iraqi',
-        ar: 'عراقي',
+        enAdjective: 'Iraqi',
+        arAdjective: 'عراقي',
         type: CurrencyType.dinar,
       ),
       dialCode: '964',
@@ -285,15 +285,15 @@ class MenaData {
     ),
     MenaItemModel(
       countryName: CountryName(
-        ar: 'سوريا',
-        en: 'Syria',
+        arabicName: 'سوريا',
+        englishName: 'Syria',
         officalAR: 'الجمهورية العربية السورية',
         officalEN: 'Syrian Arab Republic',
       ),
       currency: Currency(
         code: 'SYP',
-        en: 'Syrian',
-        ar: 'سورية',
+        enAdjective: 'Syrian',
+        arAdjective: 'سورية',
         type: CurrencyType.pound,
       ),
       dialCode: '963',
@@ -301,15 +301,15 @@ class MenaData {
     ),
     MenaItemModel(
       countryName: CountryName(
-        ar: 'اليمن',
-        en: 'Yemen',
+        arabicName: 'اليمن',
+        englishName: 'Yemen',
         officalAR: 'الجمهورية اليمنية',
         officalEN: 'Republic of Yemen',
       ),
       currency: Currency(
         code: 'YER',
-        en: 'Yemeni',
-        ar: 'يمني',
+        enAdjective: 'Yemeni',
+        arAdjective: 'يمني',
         type: CurrencyType.riyal,
       ),
       dialCode: '967',

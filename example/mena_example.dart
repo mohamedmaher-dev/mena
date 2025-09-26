@@ -7,8 +7,6 @@ library;
 import 'package:mena/mena.dart';
 
 void main() {
-  print(MENA.getByCode('eg')?.currency.fullEnglishName);
-
   print('=== MENA Package Demo ===\n');
 
   // Basic search demonstrations
@@ -34,7 +32,7 @@ void _demonstrateSearchMethods() {
 
   // 1. Search by ISO country code
   final palestine = MENA.getByCode('ps');
-  print('By Code (ps): ${palestine?.countryName.en}');
+  print('By Code (ps): ${palestine?.countryName.englishName}');
 
   // 2. Search by English name (partial matching)
   final morocco = MENA.getByName('Morocco');
@@ -43,16 +41,16 @@ void _demonstrateSearchMethods() {
   // 3. Search by international dial code
   final uae = MENA.getByDialCode('971');
   print(
-    'By Dial Code (971): ${uae?.countryName.en} - Currency: ${uae?.currency}',
+    'By Dial Code (971): ${uae?.countryName.englishName} - Currency: ${uae?.currency}',
   );
 
   // 4. Search by currency code
   final saudi = MENA.getByCurrencyCode('SAR');
-  print('By Currency (SAR): ${saudi?.countryName.en}');
+  print('By Currency (SAR): ${saudi?.countryName.englishName}');
 
   // 5. Direct index access
   final firstCountry = MENA.getByIndex(0);
-  print('By Index (0): ${firstCountry?.countryName.en}');
+  print('By Index (0): ${firstCountry?.countryName.englishName}');
 
   print('');
 }
@@ -69,13 +67,13 @@ void _exploreDataCollections() {
   // List all Middle East countries
   print('\nMiddle East Countries:');
   for (final country in MENA.middleEast) {
-    print('  • ${country.countryName.en} (+${country.dialCode})');
+    print('  • ${country.countryName.englishName} (+${country.dialCode})');
   }
 
   // List all North Africa countries
   print('\nNorth Africa Countries:');
   for (final country in MENA.northernAfrica) {
-    print('  • ${country.countryName.en} (${country.currency})');
+    print('  • ${country.countryName.englishName} (${country.currency})');
   }
 
   print('');
@@ -89,9 +87,9 @@ void _demonstrateLocalization() {
   final palestine = MENA.getByCode('ps');
   if (palestine != null) {
     print('Country: ${palestine.code.toUpperCase()} (Palestine)');
-    print('English Common: ${palestine.countryName.en}');
+    print('English Common: ${palestine.countryName.englishName}');
     print('English Official: ${palestine.countryName.officalEN}');
-    print('Arabic Common: ${palestine.countryName.ar}'); // فلسطين
+    print('Arabic Common: ${palestine.countryName.arabicName}'); // فلسطين
     print('Arabic Official: ${palestine.countryName.officalAR}'); // دولة فلسطين
     print('Palestine Flag URL: ${palestine.getSvgUrl}');
     print(
@@ -138,7 +136,7 @@ void _practicalUseCases() {
     print('  International: $international');
     print('  Formatted Code: ${phoneCountry.dialCodeWithPlus}');
     print(
-      '  Country: ${phoneCountry.countryName.en} (${phoneCountry.countryName.ar})',
+      '  Country: ${phoneCountry.countryName.englishName} (${phoneCountry.countryName.arabicName})',
     );
   }
 
@@ -149,9 +147,8 @@ void _practicalUseCases() {
     final country = MENA.getByCurrencyCode(currencyCode);
     if (country != null) {
       final currency = country.currency;
-      print('  ${currency.code}: ${currency.en} (${currency.ar})');
       print(
-        '    Symbol: ${currency.symbol ?? 'N/A'} | Country: ${country.countryName.en}',
+        '  ${currency.code}: ${currency.enAdjective} (${currency.arAdjective})',
       );
     }
   }
@@ -161,7 +158,7 @@ void _practicalUseCases() {
   final apiCountry = MENA.getByCode('ps');
   if (apiCountry != null) {
     final json = apiCountry.toJson();
-    print('  API Payload for ${apiCountry.countryName.en}:');
+    print('  API Payload for ${apiCountry.countryName.englishName}:');
     print('  {');
     print('    "code": "${json['code']}"');
     print('    "currency": {');
@@ -197,7 +194,7 @@ void _errorHandlingExamples() {
 
   // Safe property access
   final safeExample = MENA.getByCode('eg');
-  final safeName = safeExample?.countryName.en ?? 'Unknown Country';
+  final safeName = safeExample?.countryName.englishName ?? 'Unknown Country';
   final safeCurrency = safeExample?.currency ?? 'N/A';
   print('  Safe access: $safeName uses $safeCurrency');
 

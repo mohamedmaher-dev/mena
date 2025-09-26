@@ -1,4 +1,5 @@
 import 'currency_type.dart';
+import '../mena_core.dart';
 
 /// Immutable data model representing a currency with localized names.
 ///
@@ -10,21 +11,23 @@ import 'currency_type.dart';
 /// ```dart
 /// final currency = Currency(
 ///   code: 'AED',
-///   en: 'UAE Dirham',
-///   ar: 'درهم إماراتي',
+///   enAdjective: 'Emirati',
+///   arAdjective: 'إماراتي',
 ///   type: CurrencyType.dirham,
 /// );
 ///
-/// print(currency.en); // "UAE Dirham"
-/// print(currency.ar); // "درهم إماراتي"
+/// print(currency.enAdjective); // "Emirati"
+/// print(currency.arAdjective); // "إماراتي"
 /// print(currency.code); // "AED"
 /// print(currency.type); // CurrencyType.dirham
+/// print(currency.getFullName); // Adapts to current locale
+/// print(currency.getSymbol); // Symbol adapts to current locale
 /// ```
 ///
 /// ## Properties:
 /// - [code]: ISO 4217 currency code (e.g., "AED", "SAR")
-/// - [en]: English currency name
-/// - [ar]: Arabic currency name
+/// - [enAdjective]: English country adjective
+/// - [arAdjective]: Arabic country adjective
 /// - [type]: Currency type classification (Dinar, Riyal, etc.)
 ///
 /// @since 1.1.0
@@ -35,16 +38,16 @@ class Currency {
   ///
   /// **Parameters:**
   /// - [code]: ISO 4217 currency code (3 uppercase letters)
-  /// - [en]: English currency name
-  /// - [ar]: Arabic currency name
+  /// - [enAdjective]: English country adjective
+  /// - [arAdjective]: Arabic country adjective
   /// - [type]: Currency type classification
   ///
   /// **Example:**
   /// ```dart
   /// final currency = Currency(
   ///   code: 'EGP',
-  ///   en: 'Egyptian',      // Country adjective
-  ///   ar: 'مصري',         // Country adjective in Arabic
+  ///   enAdjective: 'Egyptian',      // Country adjective
+  ///   arAdjective: 'مصري',         // Country adjective in Arabic
   ///   type: CurrencyType.pound,
   /// );
   /// // Full names: currency.fullEnglishName = "Egyptian Pound"
@@ -52,8 +55,8 @@ class Currency {
   /// ```
   const Currency({
     required this.code,
-    required this.en,
-    required this.ar,
+    required this.enAdjective,
+    required this.arAdjective,
     required this.type,
   });
 
@@ -79,7 +82,7 @@ class Currency {
   /// - "Saudi" (for SAR - combines with "Riyal" to make "Saudi Riyal")
   /// - "Emirati" (for AED - combines with "Dirham" to make "Emirati Dirham")
   /// - "Palestinian" (for ILS - combines with "Shekel" to make "Palestinian Shekel")
-  final String en;
+  final String enAdjective;
 
   /// Country adjective in Arabic.
   ///
@@ -92,7 +95,7 @@ class Currency {
   /// - "سعودي" (Saudi - combines with "ريال" to make "ريال سعودي")
   /// - "إماراتي" (Emirati - combines with "درهم" to make "درهم إماراتي")
   /// - "فلسطيني" (Palestinian - combines with "شيكل" to make "شيكل فلسطيني")
-  final String ar;
+  final String arAdjective;
 
   /// Currency type classification.
   ///
@@ -131,7 +134,7 @@ class Currency {
   /// final uaeCurrency = MENA.getByCode('ae')?.currency;
   /// print(uaeCurrency?.enName); // "Emirati Dirham"
   /// ```
-  String get fullEnglishName => '$en ${type.enName}';
+  String get fullEnglishName => '$enAdjective ${type.enName}';
 
   /// Full Arabic currency name.
   ///
@@ -148,36 +151,81 @@ class Currency {
   /// final uaeCurrency = MENA.getByCode('ae')?.currency;
   /// print(uaeCurrency?.arName); // "درهم إماراتي"
   /// ```
-  String get fullArabicName => '${type.arName} $ar';
+  String get fullArabicName => '${type.arName} $arAdjective';
 
-  /// Returns true if this currency is widely used in international trade.
+  /// Returns the full currency name based on the current default locale in MENA.
   ///
-  /// Based on common usage patterns in the MENA region for
-  /// international transactions and forex markets.
-  bool get isInternational {
-    switch (code) {
-      case 'AED':
-      case 'SAR':
-      case 'QAR':
-      case 'KWD':
-      case 'BHD':
-      case 'OMR':
-        return true;
-      default:
-        return false;
-    }
-  }
+  /// **Returns:** The appropriate full name based on [MENA.defaultLocale]
+  /// - If locale is 'ar': returns [fullArabicName] (Arabic full name)
+  /// - If locale is 'en': returns [fullEnglishName] (English full name)
+  ///
+  /// **Example:**
+  /// ```dart
+  /// final currency = MENA.getByCode('ae')?.currency;
+  ///
+  /// // With Arabic locale (default)
+  /// print(MENA.defaultLocale); // 'ar'
+  /// print(currency?.getFullName); // "درهم إماراتي"
+  ///
+  /// // Switch to English locale
+  /// MENA.setDefaultLocale('en');
+  /// print(currency?.getFullName); // "Emirati Dirham"
+  /// ```
+  ///
+  /// **Use Cases:**
+  /// - Dynamic UI that adapts to current locale
+  /// - Internationalized financial applications
+  /// - User preference-based currency display
+  String get getFullName =>
+      MENA.defaultLocale == 'ar' ? fullArabicName : fullEnglishName;
 
-  /// Returns the currency symbol if commonly used.
+  /// Returns the currency symbol based on the current default locale in MENA.
+  ///
+  /// **Returns:** The appropriate symbol based on [MENA.defaultLocale]
+  /// - If locale is 'ar': returns [arabicSymbol] (Arabic symbol like "د.إ")
+  /// - If locale is 'en': returns [englishSymbol] (English symbol like "AED")
+  ///
+  /// **Example:**
+  /// ```dart
+  /// final currency = MENA.getByCode('ae')?.currency;
+  ///
+  /// // With Arabic locale (default)
+  /// print(MENA.defaultLocale); // 'ar'
+  /// print(currency?.getSymbol); // "د.إ"
+  ///
+  /// // Switch to English locale
+  /// MENA.setDefaultLocale('en');
+  /// print(currency?.getSymbol); // "AED"
+  /// ```
+  ///
+  /// **Use Cases:**
+  /// - Price display in e-commerce applications
+  /// - Financial dashboards
+  /// - Currency conversion interfaces
+  String? get getSymbol =>
+      MENA.defaultLocale == 'ar' ? arabicSymbol : englishSymbol;
+
+  /// Returns the English currency symbol if commonly used.
   ///
   /// **Returns:** Currency symbol or null if not commonly represented
   ///
   /// **Example:**
   /// ```dart
-  /// final aed = Currency(code: 'AED', en: 'UAE Dirham', ar: 'درهم إماراتي');
-  /// print(aed.symbol); // "د.إ"
+  /// final aed = Currency(code: 'AED', enAdjective: 'Emirati', arAdjective: 'إماراتي');
+  /// print(aed.englishSymbol); // "AED"
   /// ```
-  String? get symbol {
+  String? get englishSymbol => code;
+
+  /// Returns the Arabic currency symbol if commonly used.
+  ///
+  /// **Returns:** Arabic currency symbol or null if not commonly represented
+  ///
+  /// **Example:**
+  /// ```dart
+  /// final aed = Currency(code: 'AED', enAdjective: 'Emirati', arAdjective: 'إماراتي');
+  /// print(aed.arabicSymbol); // "د.إ"
+  /// ```
+  String? get arabicSymbol {
     switch (code) {
       case 'AED':
         return 'د.إ';
@@ -199,109 +247,27 @@ class Currency {
         return 'ل.ل';
       case 'ILS':
         return '₪';
+      case 'TND':
+        return 'د.ت';
+      case 'DZD':
+        return 'د.ج';
+      case 'LYD':
+        return 'د.ل';
+      case 'MAD':
+        return 'د.م';
+      case 'IQD':
+        return 'د.ع';
+      case 'SYP':
+        return 'ل.س';
+      case 'SDG':
+        return 'ج.س';
+      case 'YER':
+        return 'ر.ي';
+      case 'MRU':
+        return 'أ.م';
       default:
         return null;
     }
-  }
-
-  /// Human-readable description combining code and English name.
-  ///
-  /// **Format:** "{code} - {English name}"
-  ///
-  /// **Example:**
-  /// ```dart
-  /// final currency = Currency(code: 'AED', en: 'UAE Dirham', ar: 'درهم إماراتي');
-  /// print(currency.description); // "AED - UAE Dirham"
-  /// ```
-  String get description => '$code - $en';
-
-  /// Returns all English name variants.
-  ///
-  /// **Returns:** List of English names (adjective, type, and full name)
-  ///
-  /// **Example:**
-  /// ```dart
-  /// final currency = MENA.getByCode('eg')?.currency;
-  /// print(currency?.englishNames); // ["Egyptian", "Pound", "Egyptian Pound"]
-  /// ```
-  List<String> get englishNames {
-    final names = <String>[];
-    names.add(en); // Country adjective
-    names.add(type.enName); // Currency type name
-    names.add(fullEnglishName); // Full constructed name
-    return names.toSet().toList(); // Remove duplicates
-  }
-
-  /// Returns all Arabic name variants.
-  ///
-  /// **Returns:** List of Arabic names (adjective, type, and full name)
-  ///
-  /// **Example:**
-  /// ```dart
-  /// final currency = MENA.getByCode('eg')?.currency;
-  /// print(currency?.arabicNames); // ["مصري", "جنيه", "جنيه مصري"]
-  /// ```
-  List<String> get arabicNames {
-    final names = <String>[];
-    names.add(ar); // Country adjective
-    names.add(type.arName); // Currency type name
-    names.add(fullArabicName); // Full constructed name
-    return names.toSet().toList(); // Remove duplicates
-  }
-
-  /// Returns all name variants in a structured format.
-  ///
-  /// **Returns:** Map with categorized name variants
-  ///
-  /// **Example:**
-  /// ```dart
-  /// final currency = MENA.getByCode('eg')?.currency;
-  /// final names = currency?.allNames;
-  /// // {
-  /// //   'code': 'EGP',
-  /// //   'english': ['Egyptian', 'Pound', 'Egyptian Pound'],
-  /// //   'arabic': ['مصري', 'جنيه', 'جنيه مصري'],
-  /// //   'type': 'pound',
-  /// //   'symbol': 'ج.م'
-  /// // }
-  /// ```
-  Map<String, dynamic> get allNames => {
-    'code': code,
-    'english': englishNames,
-    'arabic': arabicNames,
-    'type': type.name,
-    'symbol': symbol,
-  };
-
-  /// Checks if a given name matches any variant of this currency.
-  ///
-  /// **Parameters:**
-  /// - [name]: Name to check (case-insensitive for English, exact for Arabic)
-  ///
-  /// **Returns:** True if the name matches any variant
-  ///
-  /// **Example:**
-  /// ```dart
-  /// final currency = MENA.getByCode('eg')?.currency;
-  /// print(currency?.matchesName('Pound')); // true
-  /// print(currency?.matchesName('جنيه')); // true
-  /// print(currency?.matchesName('EGP')); // true
-  /// ```
-  bool matchesName(String name) {
-    // Check ISO code
-    if (code.toLowerCase() == name.toLowerCase()) return true;
-
-    // Check English names (case-insensitive)
-    for (final englishName in englishNames) {
-      if (englishName.toLowerCase() == name.toLowerCase()) return true;
-    }
-
-    // Check Arabic names (exact match)
-    for (final arabicName in arabicNames) {
-      if (arabicName == name) return true;
-    }
-
-    return false;
   }
 
   /// Serializes the currency to a JSON-compatible map.
@@ -310,18 +276,18 @@ class Currency {
   ///
   /// **Example:**
   /// ```dart
-  /// final currency = Currency(code: 'ILS', en: 'Israeli Shekel', ar: 'شيكل إسرائيلي');
+  /// final currency = Currency(code: 'ILS', enAdjective: 'Israeli', arAdjective: 'إسرائيلي');
   /// final json = currency.toJson();
   /// // {
   /// //   "code": "ILS",
-  /// //   "en": "Israeli Shekel",
-  /// //   "ar": "شيكل إسرائيلي"
+  /// //   "en": "Israeli",
+  /// //   "ar": "إسرائيلي"
   /// // }
   /// ```
   Map<String, dynamic> toJson() => {
     'code': code,
-    'en': en,
-    'ar': ar,
+    'enAdjective': enAdjective,
+    'arAdjective': arAdjective,
     'type': type.name,
   };
 
@@ -336,8 +302,8 @@ class Currency {
   /// ```dart
   /// final json = {
   ///   'code': 'SAR',
-  ///   'en': 'Saudi Riyal',
-  ///   'ar': 'ريال سعودي'
+  ///   'enAdjective': 'Saudi',
+  ///   'arAdjective': 'سعودي'
   /// };
   /// final currency = Currency.fromJson(json);
   /// ```
@@ -345,8 +311,8 @@ class Currency {
   /// **Throws:** [ArgumentError] if required fields are missing
   factory Currency.fromJson(Map<String, dynamic> json) {
     final code = json['code'] as String?;
-    final en = json['en'] as String?;
-    final ar = json['ar'] as String?;
+    final en = json['enAdjective'] as String?;
+    final ar = json['arAdjective'] as String?;
     final typeString = json['type'] as String?;
 
     if (code == null || en == null || ar == null || typeString == null) {
@@ -360,7 +326,7 @@ class Currency {
       orElse: () => throw ArgumentError('Invalid currency type: $typeString'),
     );
 
-    return Currency(code: code, en: en, ar: ar, type: type);
+    return Currency(code: code, enAdjective: en, arAdjective: ar, type: type);
   }
 
   @override
@@ -369,13 +335,18 @@ class Currency {
       other is Currency &&
           runtimeType == other.runtimeType &&
           code == other.code &&
-          en == other.en &&
-          ar == other.ar &&
+          enAdjective == other.enAdjective &&
+          arAdjective == other.arAdjective &&
           type == other.type;
 
   @override
-  int get hashCode => code.hashCode ^ en.hashCode ^ ar.hashCode ^ type.hashCode;
+  int get hashCode =>
+      code.hashCode ^
+      enAdjective.hashCode ^
+      arAdjective.hashCode ^
+      type.hashCode;
 
   @override
-  String toString() => 'Currency(code: $code, en: $en, ar: $ar)';
+  String toString() =>
+      'Currency(code: $code, enAdjective: $enAdjective, arAdjective: $arAdjective)';
 }

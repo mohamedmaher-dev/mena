@@ -32,6 +32,7 @@ Perfect for building country selectors, phone number inputs, currency converters
   - [Country Selector](#country-selector)
   - [Phone Number Input](#phone-number-input)
   - [Flag Gallery](#flag-gallery)
+  - [Locale Management](#locale-management)
   - [Currency Display](#currency-display)
   - [API Integration](#api-integration)
 - [🌍 Supported Countries](#-supported-countries)
@@ -47,7 +48,7 @@ Perfect for building country selectors, phone number inputs, currency converters
 
 - 🌍 **Complete MENA Coverage**: 19 countries across Middle East and North Africa
 - 🔍 **Multiple Search Methods**: Find by ISO code, name, dial code, or currency
-- 🌐 **Full Localization**: Arabic and English names (common + official)
+- 🌐 **Full Localization**: Arabic and English names (common + official) with automatic locale switching
 - 🏴 **Advanced Flag System**: SVG, PNG (emoji-style), and JPEG/PNG images
 - 📐 **Flexible Sizing**: 24 emoji sizes + 15 image sizes (width/height based)
 - 🎨 **Format Options**: PNG (lossless) and JPEG (compressed) support
@@ -77,9 +78,16 @@ void main() {
   print(palestine?.countryName.en); // "Palestine"
   print(palestine?.countryName.ar); // "فلسطين"
 
-  // Search by name
-  final egypt = MENA.getByName('Egypt');
+  // Search by name (adapts to current locale - Arabic by default)
+  final egypt = MENA.getByName('مصر'); // Arabic search by default
   print(egypt?.currency); // "EGP"
+
+  // Or search explicitly in English
+  final egyptEn = MENA.getByEnglishName('Egypt');
+
+  // Set locale to English for subsequent searches
+  MENA.setDefaultLocale('en');
+  final egyptLocalized = MENA.getByName('Egypt'); // Now uses English
 
   // Find by phone code
   final palestineByPhone = MENA.getByDialCode('970');
@@ -159,13 +167,22 @@ final heightFlag = palestine?.getImageUrl(ImageSize.h120, ImageType.png);
 
 ### Search Methods
 
-| Method                      | Description                     | Example                         |
-| --------------------------- | ------------------------------- | ------------------------------- |
-| `getByCode(String)`         | Find by ISO 3166-1 alpha-2 code | `MENA.getByCode('ps')`          |
-| `getByName(String)`         | Find by English name (partial)  | `MENA.getByName('Palestine')`   |
-| `getByDialCode(String)`     | Find by international dial code | `MENA.getByDialCode('970')`     |
-| `getByCurrencyCode(String)` | Find by ISO 4217 currency code  | `MENA.getByCurrencyCode('EGP')` |
-| `getByIndex(int)`           | Get by array index (0-18)       | `MENA.getByIndex(0)`            |
+| Method                      | Description                             | Example                              |
+| --------------------------- | --------------------------------------- | ------------------------------------ |
+| `getByCode(String)`         | Find by ISO 3166-1 alpha-2 code         | `MENA.getByCode('ps')`               |
+| `getByName(String)`         | Find by name (adapts to current locale) | `MENA.getByName('فلسطين')`           |
+| `getByEnglishName(String)`  | Find by English name (explicit)         | `MENA.getByEnglishName('Palestine')` |
+| `getByArabicName(String)`   | Find by Arabic name (explicit)          | `MENA.getByArabicName('فلسطين')`     |
+| `getByDialCode(String)`     | Find by international dial code         | `MENA.getByDialCode('970')`          |
+| `getByCurrencyCode(String)` | Find by ISO 4217 currency code          | `MENA.getByCurrencyCode('EGP')`      |
+| `getByIndex(int)`           | Get by array index (0-18)               | `MENA.getByIndex(0)`                 |
+
+### Locale Management
+
+| Method                          | Description                          | Example                       |
+| ------------------------------- | ------------------------------------ | ----------------------------- |
+| `MENA.defaultLocale`            | Get current locale ('ar' or 'en')    | `print(MENA.defaultLocale)`   |
+| `MENA.setDefaultLocale(String)` | Set locale for subsequent operations | `MENA.setDefaultLocale('en')` |
 
 ### Data Collections
 
@@ -197,11 +214,12 @@ class MenaItemModel {
 
 ```dart
 class CountryName {
-  final String en;          // Common English name
-  final String ar;          // Common Arabic name
-  final String officalEN;   // Official English name
-  final String officalAR;   // Official Arabic name
+  final String englishName;  // Common English name
+  final String arabicName;   // Common Arabic name
+  final String officalEN;    // Official English name
+  final String officalAR;    // Official Arabic name
 
+  String get getName;        // Adapts to current locale
   Map<String, dynamic> toJson();
 }
 ```
@@ -245,21 +263,16 @@ enum ImageSize {
 ```dart
 class Currency {
   final String code;              // ISO 4217 code (e.g., "ILS", "AED")
-  final String en;                // Country adjective (e.g., "Egyptian", "Saudi")
-  final String ar;                // Country adjective Arabic (e.g., "مصري", "سعودي")
+  final String enAdjective;       // Country adjective (e.g., "Egyptian", "Saudi")
+  final String arAdjective;       // Country adjective Arabic (e.g., "مصري", "سعودي")
   final CurrencyType type;        // Currency type classification
 
-  String get enName;              // Full English name (e.g., "Egyptian Pound")
-  String get arName;              // Full Arabic name (e.g., "جنيه مصري")
-  String get fullEnglishName;     // Alias for enName (backward compatibility)
-  String get fullArabicName;      // Alias for arName (backward compatibility)
-  String? get symbol;             // Currency symbol (e.g., "₪", "د.إ")
-  bool get isInternational;       // Widely used internationally
-  String get description;         // Code + English adjective
-  List<String> get englishNames;  // All English name variants
-  List<String> get arabicNames;   // All Arabic name variants
-  Map<String, dynamic> get allNames; // All name variants categorized
-  bool matchesName(String name);  // Check if name matches any variant
+  String get fullEnglishName;     // Full English name (e.g., "Egyptian Pound")
+  String get fullArabicName;      // Full Arabic name (e.g., "جنيه مصري")
+  String get getFullName;         // Adapts to current locale
+  String? get englishSymbol;      // English symbol (ISO code)
+  String? get arabicSymbol;       // Arabic symbol (e.g., "₪", "د.إ")
+  String? get getSymbol;          // Symbol adapts to current locale
   Map<String, dynamic> toJson();  // JSON serialization
 }
 ```
@@ -277,18 +290,9 @@ enum CurrencyType {
 
   String get enName;              // "Dinar", "Riyal", etc.
   String get arName;              // "دينار", "ريال", etc. (Arabic)
-  String get enAlternative;       // "Denarius", "Rial", etc. (Alternative)
-  String get pluralName;          // "Dinars", "Riyals", etc.
-  String get origin;              // "Roman", "Spanish", etc.
-  String get description;         // Detailed historical context
-  String get subdivisionUnit;     // "fils", "halala", etc.
+  String get getName;             // Adapts to current locale
   String get bilingualName;       // "Dinar (دينار)"
-  Map<String, String> get allNames; // All name variants
   List<String> get menaCurrencies; // Currency codes using this type
-  bool get isGoldBased;           // Historically gold-backed
-  bool get isSilverBased;         // Historically silver-backed
-  bool get isDecimalBased;        // Uses 10/100 subdivision
-  bool matchesName(String name);  // Check if name matches any variant
 }
 ```
 
@@ -445,6 +449,33 @@ class FlagGallery extends StatelessWidget {
 }
 ```
 
+### Locale Management
+
+```dart
+import 'package:mena/mena.dart';
+
+void localeExamples() {
+  // Default locale is Arabic
+  print(MENA.defaultLocale); // 'ar'
+
+  final country = MENA.getByCode('ae');
+  print(country?.countryName.getName); // "الإمارات" (Arabic)
+  print(country?.currency.getFullName); // "درهم إماراتي" (Arabic)
+  print(country?.currency.type.getName); // "درهم" (Arabic)
+
+  // Switch to English
+  MENA.setDefaultLocale('en');
+  print(country?.countryName.getName); // "United Arab Emirates" (English)
+  print(country?.currency.getFullName); // "Emirati Dirham" (English)
+  print(country?.currency.type.getName); // "Dirham" (English)
+
+  // Search adapts to current locale
+  final search1 = MENA.getByName('Egypt'); // English search
+  MENA.setDefaultLocale('ar');
+  final search2 = MENA.getByName('مصر'); // Arabic search
+}
+```
+
 ### Currency Display
 
 ```dart
@@ -457,10 +488,11 @@ void displayPrices() {
     final country = MENA.getByCurrencyCode(currencyCode);
     if (country != null) {
       print('Currency: ${country.currency.code}');
-      print('English: ${country.currency.en}');
-      print('Arabic: ${country.currency.ar}');
-      print('Symbol: ${country.currency.symbol ?? 'N/A'}');
-      print('Country: ${country.countryName.en}');
+      print('English: ${country.currency.fullEnglishName}');
+      print('Arabic: ${country.currency.fullArabicName}');
+      print('Localized: ${country.currency.getFullName}'); // Adapts to locale
+      print('Symbol: ${country.currency.getSymbol ?? 'N/A'}'); // Adapts to locale
+      print('Country: ${country.countryName.getName}'); // Adapts to locale
       print('---');
     }
   }

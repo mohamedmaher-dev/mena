@@ -1,3 +1,5 @@
+import '../mena_core.dart';
+
 /// Immutable model containing localized country names in multiple formats.
 ///
 /// This class provides both common (everyday) and official (formal/government)
@@ -18,12 +20,14 @@
 /// final names = country?.countryName;
 ///
 /// // Display in UI
-/// Text(names?.en ?? '');              // "United Arab Emirates"
-/// Text(names?.ar ?? '');              // "الإمارات"
+/// Text(names?.englishName ?? '');     // "United Arab Emirates"
+/// Text(names?.arabicName ?? '');      // "الإمارات"
+/// Text(names?.getName ?? '');         // Common name adapts to current locale
 ///
 /// // For official documents
 /// Text(names?.officalEN ?? '');       // "United Arab Emirates"
 /// Text(names?.officalAR ?? '');       // "الإمارات العربية المتحدة"
+/// Text(names?.getOfficial ?? '');     // Official name adapts to current locale
 ///
 /// // JSON serialization
 /// final json = names?.toJson();
@@ -77,7 +81,7 @@ class CountryName {
   /// - Dropdown menus
   /// - Search suggestions
   /// - General communication
-  final String en;
+  final String englishName;
 
   /// Common country name in Arabic.
   ///
@@ -91,7 +95,7 @@ class CountryName {
   ///
   /// **Text Direction:** Right-to-left (RTL)
   /// **Script:** Arabic
-  final String ar;
+  final String arabicName;
 
   /// Creates a new immutable [CountryName] instance.
   ///
@@ -101,8 +105,8 @@ class CountryName {
   /// **Parameters:**
   /// - [officalEN]: Official English name (formal/government)
   /// - [officalAR]: Official Arabic name (formal/government)
-  /// - [ar]: Common Arabic name (everyday usage)
-  /// - [en]: Common English name (everyday usage)
+  /// - [arabicName]: Common Arabic name (everyday usage)
+  /// - [englishName]: Common English name (everyday usage)
   ///
   /// **Example:**
   /// ```dart
@@ -116,13 +120,70 @@ class CountryName {
   const CountryName({
     required this.officalEN,
     required this.officalAR,
-    required this.ar,
-    required this.en,
+    required this.arabicName,
+    required this.englishName,
   });
+
+  /// Returns the country name based on the current default locale in MENA.
+  ///
+  /// **Returns:** The appropriate common name based on [MENA.defaultLocale]
+  /// - If locale is 'ar': returns [arabicName] (Arabic common name)
+  /// - If locale is 'en': returns [englishName] (English common name)
+  ///
+  /// **Example:**
+  /// ```dart
+  /// final country = MENA.getByCode('ae');
+  /// final names = country?.countryName;
+  ///
+  /// // With Arabic locale (default)
+  /// print(MENA.defaultLocale); // 'ar'
+  /// print(names?.getName); // "الإمارات"
+  ///
+  /// // Switch to English locale
+  /// MENA.setDefaultLocale('en');
+  /// print(names?.getName); // "United Arab Emirates"
+  /// ```
+  ///
+  /// **Use Cases:**
+  /// - Dynamic UI that adapts to current locale
+  /// - Internationalized applications
+  /// - User preference-based display
+  ///
+  /// @since 1.0.0
+  String get getName => MENA.defaultLocale == 'ar' ? arabicName : englishName;
+
+  /// Returns the official country name based on the current default locale in MENA.
+  ///
+  /// **Returns:** The appropriate official name based on [MENA.defaultLocale]
+  /// - If locale is 'ar': returns [officalAR] (Arabic official name)
+  /// - If locale is 'en': returns [officalEN] (English official name)
+  ///
+  /// **Example:**
+  /// ```dart
+  /// final country = MENA.getByCode('ae');
+  /// final names = country?.countryName;
+  ///
+  /// // With Arabic locale (default)
+  /// print(MENA.defaultLocale); // 'ar'
+  /// print(names?.getOfficial); // "الإمارات العربية المتحدة"
+  ///
+  /// // Switch to English locale
+  /// MENA.setDefaultLocale('en');
+  /// print(names?.getOfficial); // "United Arab Emirates"
+  /// ```
+  ///
+  /// **Use Cases:**
+  /// - Official documents and forms
+  /// - Government applications
+  /// - Legal documentation
+  /// - Formal communications
+  ///
+  /// @since 1.0.0
+  String get getOfficial => MENA.defaultLocale == 'ar' ? officalAR : officalEN;
 
   @override
   String toString() =>
-      'CountryName{officalEN: $officalEN, officalAR: $officalAR, ar: $ar, en: $en}';
+      'CountryName{officalEN: $officalEN, officalAR: $officalAR, ar: $arabicName, en: $englishName}';
 
   @override
   bool operator ==(Object other) =>
@@ -131,18 +192,21 @@ class CountryName {
           runtimeType == other.runtimeType &&
           officalEN == other.officalEN &&
           officalAR == other.officalAR &&
-          ar == other.ar &&
-          en == other.en;
+          arabicName == other.arabicName &&
+          englishName == other.englishName;
 
   @override
   int get hashCode =>
-      officalEN.hashCode ^ officalAR.hashCode ^ ar.hashCode ^ en.hashCode;
+      officalEN.hashCode ^
+      officalAR.hashCode ^
+      arabicName.hashCode ^
+      englishName.hashCode;
 
   /// Serializes this model to a JSON map.
   Map<String, dynamic> toJson() => {
     'officalEN': officalEN,
     'officalAR': officalAR,
-    'ar': ar,
-    'en': en,
+    'ar': arabicName,
+    'en': englishName,
   };
 }

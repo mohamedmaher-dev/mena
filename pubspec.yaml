@@ -1,7 +1,7 @@
 name: mena
 description: >-
-  Comprehensive offline MENA country data with localized names, ISO codes,
-  currencies, and dial codes. Perfect for country selectors and international apps.
+  Comprehensive offline MENA country data with Arabic-first localization, ISO codes,
+  currencies, and dial codes. Includes automatic locale switching and Arabic/English support.
 version: 1.0.0
 homepage: https://github.com/mohamedmaher-dev/mena
 repository: https://github.com/mohamedmaher-dev/mena
