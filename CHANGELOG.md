@@ -2,6 +2,10 @@
 
 ### 🚀 Initial Release - Complete MENA Support with Arabic-First Localization
 
+- `MenaItemModel.code` and `MenaItemModel.dialCode` moved into `Country` as `country.code` and `country.dialCode`
+- `countryName` field renamed to `country` (type `Country`)
+- Removed internal search enum file; searching APIs remain the same
+
 #### **🌟 Core Features**
 
 - **Complete MENA Dataset**: 19 countries across Middle East and North Africa
@@ -22,10 +26,9 @@
 
 #### **🌐 Locale-Aware API**
 
-- **CountryName.getName**: Returns name based on current locale
-- **CurrencyType.getName**: Returns currency type based on current locale
-- **Currency.getFullName**: Returns full currency name based on current locale
-- **Currency.getSymbol**: Returns appropriate symbol based on current locale
+- **Country.getName / getOfficial / getCapital**: Locale-aware country names
+- **CurrencyType.getName**: Locale-aware currency type name
+- **Currency.getFullName / getSymbol**: Locale-aware currency name and symbol
 
 #### **💰 Enhanced Currency System**
 
@@ -42,7 +45,7 @@
 #### **🏗️ Models**
 
 - **MenaItemModel**: Core country data with comprehensive flag URL support
-- **CountryName**: Localized names (`englishName`, `arabicName`, `officalEN`, `officalAR`)
+- **Country**: Localized names + metadata (`code`, `dialCode`, capitals)
 - **Currency**: Complete currency data with locale-aware getters
 - **CurrencyType**: Currency type classification with Arabic/English names
 
