@@ -1,4 +1,4 @@
-import '../../mena.dart';
+part of '../mena_core.dart';
 
 /// Immutable data model representing a MENA country with complete metadata.
 ///
@@ -13,18 +13,18 @@ import '../../mena.dart';
 ///
 /// ## Example Usage:
 /// ```dart
-/// final country = MENA.getByCode('ae');
+/// final country = MENA.getBy(query: 'ae', key: MenaKeys.code);
 /// if (country != null) {
-///   print('Country: ${country.country.getName}');           // localized name
-///   print('Currency: ${country.currency}');                // "AED"
-///   print('Phone: +${country.dialCode}');                  // "+971"
+///   print('Country: ${country.getName}');                  // localized name
+///   print('Currency: ${country.currency.code}');           // "AED"
+///   print('Phone: ${country.dialCodeWithPlus}');           // "+971"
 ///   print('Flag: ${country.getSvgUrl}');                   // SVG flag URL
 ///
 ///   // Serialize to JSON for API calls
 ///   final json = country.toJson();
 ///
 ///   // Safe equality comparison
-///   final same = country == MENA.getByCode('ae');          // true
+///   final same = country == MENA.getBy(query: 'ae', key: MenaKeys.code); // true
 /// }
 /// ```
 ///
@@ -38,7 +38,7 @@ class MenaItemModel {
   ///
   /// **Example:**
   /// ```dart
-  /// final country = MENA.getByCode('ae');
+  /// final country = MENA.getBy(query: 'ae', key: MenaKeys.code);
   /// print(country?.country.getName);        // localized common name
   /// print(country?.country.getOfficial);    // localized official name
   /// ```
@@ -58,11 +58,11 @@ class MenaItemModel {
   ///
   /// **Example:**
   /// ```dart
-  /// final palestine = MENA.getByCode('ps');
+  /// final palestine = MENA.getBy(query: 'ps', key: MenaKeys.code);
   /// print('Code: ${palestine?.currency.code}'); // "ILS"
-  /// print('English: ${palestine?.currency.en}'); // "Egyptian Pound"
-  /// print('Arabic: ${palestine?.currency.ar}'); // "جنيه مصري"
-  /// print('Symbol: ${palestine?.currency.symbol}'); // "₪"
+  /// print('English: ${palestine?.currency.fullEnglishName}'); // "Palestinian Shekel"
+  /// print('Arabic: ${palestine?.currency.fullArabicName}'); // "شيكل فلسطيني"
+  /// print('Symbol: ${palestine?.currency.arabicSymbol}'); // "₪"
   /// print('Price: 100 ${palestine?.currency.code}'); // "Price: 100 ILS"
   /// ```
   final Currency currency;
@@ -78,12 +78,8 @@ class MenaItemModel {
   ///
   /// **Example:**
   /// ```dart
-  /// final country = MENA.getByCode('ae');
-  /// final currency = MENA.getByCode('ae')?.currency;
-  /// final menaItemModel = MenaItemModel(
-  ///   country: country,
-  ///   currency: currency,
-  /// );
+  /// final country = MENA.getBy(query: 'ae', key: MenaKeys.code);
+  /// print('Complete model: ${country.toString()}');
   /// ```
   const MenaItemModel({required this.country, required this.currency});
 
@@ -95,16 +91,15 @@ class MenaItemModel {
   ///
   /// **Example:**
   /// ```dart
-  /// final country = MENA.getByCode('ae');
-  /// final names = country?.countryName;
+  /// final country = MENA.getBy(query: 'ae', key: MenaKeys.code);
   ///
   /// // With Arabic locale (default)
   /// print(MENA.defaultLocale); // 'ar'
-  /// print(names?.getName); // "الإمارات"
+  /// print(country?.getCountryName); // "الإمارات"
   ///
   /// // Switch to English locale
   /// MENA.setDefaultLocale('en');
-  /// print(names?.getName); // "United Arab Emirates"
+  /// print(country?.getCountryName); // "United Arab Emirates"
   /// ```
   ///
   /// **Use Cases:**
@@ -113,7 +108,7 @@ class MenaItemModel {
   /// - User preference-based display
   ///
   /// @since 1.0.0
-  String get getName => _getValueByLocal(
+  String get getCountryName => MENA._getValueByLocal(
     arabicValue: country.arabicName,
     englishValue: country.englishName,
   );
@@ -126,16 +121,15 @@ class MenaItemModel {
   ///
   /// **Example:**
   /// ```dart
-  /// final country = MENA.getByCode('ae');
-  /// final names = country?.countryName;
+  /// final country = MENA.getBy(query: 'ae', key: MenaKeys.code);
   ///
   /// // With Arabic locale (default)
   /// print(MENA.defaultLocale); // 'ar'
-  /// print(names?.getOfficial); // "الإمارات العربية المتحدة"
+  /// print(country?.getOfficialName); // "الإمارات العربية المتحدة"
   ///
   /// // Switch to English locale
   /// MENA.setDefaultLocale('en');
-  /// print(names?.getOfficial); // "United Arab Emirates"
+  /// print(country?.getOfficialName); // "United Arab Emirates"
   /// ```
   ///
   /// **Use Cases:**
@@ -145,7 +139,7 @@ class MenaItemModel {
   /// - Formal communications
   ///
   /// @since 1.0.0
-  String get getOfficialName => _getValueByLocal(
+  String get getOfficialName => MENA._getValueByLocal(
     arabicValue: country.officalAR,
     englishValue: country.officalEN,
   );
@@ -158,16 +152,15 @@ class MenaItemModel {
   ///
   /// **Example:**
   /// ```dart
-  /// final country = MENA.getByCode('ae');
-  /// final names = country?.countryName;
+  /// final country = MENA.getBy(query: 'ae', key: MenaKeys.code);
   ///
   /// // With Arabic locale (default)
   /// print(MENA.defaultLocale); // 'ar'
-  /// print(names?.getCapital); // "أبو ظبي"
+  /// print(country?.getCapitalName); // "أبو ظبي"
   ///
   /// // Switch to English locale
   /// MENA.setDefaultLocale('en');
-  /// print(names?.getCapital); // "Abu Dhabi"
+  /// print(country?.getCapitalName); // "Abu Dhabi"
   /// ```
   ///
   /// **Use Cases:**
@@ -177,7 +170,7 @@ class MenaItemModel {
   /// - Location-based services
   ///
   /// @since 1.0.0
-  String get getCapitalName => _getValueByLocal(
+  String get getCapitalName => MENA._getValueByLocal(
     arabicValue: country.arabicCapital,
     englishValue: country.englishCapital,
   );
@@ -190,22 +183,22 @@ class MenaItemModel {
   ///
   /// **Example:**
   /// ```dart
-  /// final currency = MENA.getByCode('ae')?.currency;
+  /// final country = MENA.getBy(query: 'ae', key: MenaKeys.code);
   ///
   /// // With Arabic locale (default)
   /// print(MENA.defaultLocale); // 'ar'
-  /// print(currency?.getFullName); // "درهم إماراتي"
+  /// print(country?.getCurrencyName); // "درهم إماراتي"
   ///
   /// // Switch to English locale
   /// MENA.setDefaultLocale('en');
-  /// print(currency?.getFullName); // "Emirati Dirham"
+  /// print(country?.getCurrencyName); // "Emirati Dirham"
   /// ```
   ///
   /// **Use Cases:**
   /// - Dynamic UI that adapts to current locale
   /// - Internationalized financial applications
   /// - User preference-based currency display
-  String get getCurrencyName => _getValueByLocal(
+  String get getCurrencyName => MENA._getValueByLocal(
     arabicValue: currency.fullArabicName,
     englishValue: currency.fullEnglishName,
   );
@@ -218,22 +211,22 @@ class MenaItemModel {
   ///
   /// **Example:**
   /// ```dart
-  /// final currency = MENA.getByCode('ae')?.currency;
+  /// final country = MENA.getBy(query: 'ae', key: MenaKeys.code);
   ///
   /// // With Arabic locale (default)
   /// print(MENA.defaultLocale); // 'ar'
-  /// print(currency?.getSymbol); // "د.إ"
+  /// print(country?.getCurrencySymbol); // "د.إ"
   ///
   /// // Switch to English locale
   /// MENA.setDefaultLocale('en');
-  /// print(currency?.getSymbol); // "AED"
+  /// print(country?.getCurrencySymbol); // "AED"
   /// ```
   ///
   /// **Use Cases:**
   /// - Price display in e-commerce applications
   /// - Financial dashboards
   /// - Currency conversion interfaces
-  String get getCurrencySymbol => _getValueByLocal(
+  String get getCurrencySymbol => MENA._getValueByLocal(
     arabicValue: currency.arabicSymbol,
     englishValue: currency.englishSymbol,
   );
@@ -247,14 +240,14 @@ class MenaItemModel {
   ///
   /// **Example:**
   /// ```dart
-  /// final country = MENA.getByCode('ae');
+  /// final country = MENA.getBy(query: 'ae', key: MenaKeys.code);
   /// final formatted = country?.dialCodeWithPlus; // "+971"
   ///
   /// // Use in phone number display:
   /// Text('Call: ${country?.dialCodeWithPlus} 501234567');
   ///
   /// // Use in dropdown:
-  /// Text('${country?.dialCodeWithPlus} ${country?.country.getName}');
+  /// Text('${country?.dialCodeWithPlus} ${country?.getName}');
   /// ```
   ///
   /// **Use Cases:**
@@ -273,19 +266,19 @@ class MenaItemModel {
   ///
   /// **Example:**
   /// ```dart
-  /// final palestine = MENA.getByCode('ps');
+  /// final palestine = MENA.getBy(query: 'ps', key: MenaKeys.code);
   /// final flagImage = palestine?.getSvgUrl; // "https://flagcdn.com/ps.svg"
   ///
   /// // Use in Flutter Image widget:
   /// Image.network(flagImage)
   ///
   /// // Use in HTML img tag:
-  /// <img src="$flagImage" alt="UAE Flag" />
+  /// <img src="$flagImage" alt="Palestine Flag" />
   /// ```
   ///
   /// **Note:** For specific sizes, use [getEmojiUrl] with [EmojiSize] enum.
   /// Check [flagcdn.com](https://flagcdn.com) for more information.
-  String get getSvgUrl => 'https://flagcdn.com/${country.code}.svg';
+  Uri get getSvgUrl => Uri.parse('https://flagcdn.com/${country.code}.svg');
 
   /// Returns an emoji flag URL with the specified [size].
   ///
@@ -300,7 +293,7 @@ class MenaItemModel {
   ///
   /// **Example:**
   /// ```dart
-  /// final palestine = MENA.getByCode('ps');
+  /// final palestine = MENA.getBy(query: 'ps', key: MenaKeys.code);
   ///
   /// // Small icon for lists
   /// final smallFlag = palestine?.getEmojiUrl(EmojiSize.size24x18);
@@ -320,8 +313,8 @@ class MenaItemModel {
   /// - Chat applications and social features
   ///
   /// **URL Format:** `https://flagcdn.com/{dimensions}/{countryCode}.png`
-  String getEmojiUrl(EmojiSize size) =>
-      'https://flagcdn.com/${size.dimensions}/${country.code}.png';
+  Uri getEmojiUrl(EmojiSize size) =>
+      Uri.parse('https://flagcdn.com/${size.dimensions}/${country.code}.png');
 
   /// Returns an image flag URL with the specified [size] and [type].
   ///
@@ -337,7 +330,7 @@ class MenaItemModel {
   ///
   /// **Example:**
   /// ```dart
-  /// final palestine = MENA.getByCode('ps');
+  /// final palestine = MENA.getBy(query: 'ps', key: MenaKeys.code);
   ///
   /// // JPEG format (default) - smaller file size
   /// final jpegFlag = palestine?.getImageUrl(ImageSize.w160);
@@ -358,8 +351,12 @@ class MenaItemModel {
   /// - Print-quality images with precise dimensions
   ///
   /// **URL Format:** `https://flagcdn.com/{sizeParam}/{countryCode}.{extension}`
-  String getImageUrl(ImageSize size, [ImageType type = ImageType.jpeg]) =>
-      'https://flagcdn.com/${size.sizeParam}/${country.code}.${type.extension}';
+  Uri getImageUrl(
+    ImageSize size, [
+    ImageType type = ImageType.jpeg,
+  ]) => Uri.parse(
+    'https://flagcdn.com/${size.sizeParam}/${country.code}.${type.extension}',
+  );
 
   /// Returns a string representation of the [MenaItemModel].
   ///
@@ -367,33 +364,12 @@ class MenaItemModel {
   ///
   /// **Example:**
   /// ```dart
-  /// final country = MENA.getByCode('ae');
-  /// print(country?.toString()); // "Country{country: Country{en: United Arab Emirates, ar: الإمارات, officalEN: United Arab Emirates, officalAR: الإمارات العربية المتحدة}, currency: Currency{code: AED, en: Emirati, ar: إماراتي, symbol: د.إ}}"
+  /// final country = MENA.getBy(query: 'ae', key: MenaKeys.code);
+  /// print(country?.toString()); // "Country{country: Country{...}, currency: Currency{...}}"
   /// ```
   @override
   String toString() =>
       'Country{country: ${country.toString()}, currency: $currency}';
-
-  /// Returns the value based on the current default locale in MENA.
-  ///
-  /// **Returns:** The appropriate value based on [MENA.defaultLocale]
-  /// - If locale is 'ar': returns [arabicValue] (Arabic value)
-  /// - If locale is 'en': returns [englishValue] (English value)
-  ///
-  /// **Example:**
-  /// ```dart
-  /// final country = MENA.getByCode('ae');
-  /// final name = country?.getName; // "United Arab Emirates"
-  /// ```
-  ///
-  /// **Use Cases:**
-  /// - Dynamic UI that adapts to current locale
-  /// - Internationalized applications
-  /// - User preference-based display
-  ///
-  /// @since 1.0.0
-  T _getValueByLocal<T>({required T arabicValue, required T englishValue}) =>
-      MENA.defaultLocale == 'ar' ? arabicValue : englishValue;
 
   /// Serializes this model to a JSON-compatible map.
   ///
@@ -404,20 +380,25 @@ class MenaItemModel {
   ///
   /// **Example:**
   /// ```dart
-  /// final country = MENA.getByCode('ae');
+  /// final country = MENA.getBy(query: 'ae', key: MenaKeys.code);
   /// final json = country?.toJson();
   ///
   /// // Result:
   /// // {
   /// //   'country': {
-  /// //     'en': 'United Arab Emirates',
-  /// //     'ar': 'الإمارات',
+  /// //     'englishName': 'United Arab Emirates',
+  /// //     'arabicName': 'الإمارات',
   /// //     'officalEN': 'United Arab Emirates',
-  /// //     'officalAR': 'الإمارات العربية المتحدة'
+  /// //     'officalAR': 'الإمارات العربية المتحدة',
+  /// //     'englishCapital': 'Abu Dhabi',
+  /// //     'arabicCapital': 'أبو ظبي'
   /// //   },
-  /// //   'currency': 'AED',
-  /// //   'dialCode': '971',
-  /// //   'code': 'ae'
+  /// //   'currency': {
+  /// //     'code': 'AED',
+  /// //     'enAdjective': 'Emirati',
+  /// //     'arAdjective': 'إماراتي',
+  /// //     'type': 'dirham'
+  /// //   }
   /// // }
   ///
   /// // Use with json.encode() for API calls:
@@ -440,8 +421,8 @@ class MenaItemModel {
   ///
   /// **Example:**
   /// ```dart
-  /// final country = MENA.getByCode('ae');
-  /// final other = MENA.getByCode('ae');
+  /// final country = MENA.getBy(query: 'ae', key: MenaKeys.code);
+  /// final other = MENA.getBy(query: 'ae', key: MenaKeys.code);
   /// print(country == other); // true
   /// ```
   ///

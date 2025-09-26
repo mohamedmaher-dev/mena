@@ -1,3 +1,5 @@
+import '../mena_core.dart';
+
 /// Immutable model containing localized country names in multiple formats.
 ///
 /// This class provides both common (everyday) and official (formal/government)
@@ -14,8 +16,8 @@
 ///
 /// ## Example Usage:
 /// ```dart
-/// final country = MENA.getByCode('ae');
-/// final names = country?.countryName;
+/// final country = MENA.getBy(query: 'ae', key: MenaKeys.code);
+/// final names = country?.country;
 ///
 /// // Display in UI
 /// Text(names?.englishName ?? '');     // "United Arab Emirates"
@@ -225,7 +227,110 @@ class Country {
       englishCapital.hashCode ^
       arabicCapital.hashCode;
 
+  /// Returns the country name based on the current default locale.
+  ///
+  /// **Returns:** The appropriate common name based on [MENA.defaultLocale]
+  /// - If locale is 'ar': returns [arabicName] (Arabic common name)
+  /// - If locale is 'en': returns [englishName] (English common name)
+  ///
+  /// **Example:**
+  /// ```dart
+  /// final country = MENA.getBy(query: 'ae', key: MenaKeys.code);
+  /// final names = country?.country;
+  ///
+  /// // With Arabic locale (default)
+  /// print(MENA.defaultLocale); // 'ar'
+  /// print(names?.getName); // "الإمارات"
+  ///
+  /// // Switch to English locale
+  /// MENA.setDefaultLocale('en');
+  /// print(names?.getName); // "United Arab Emirates"
+  /// ```
+  ///
+  /// **Use Cases:**
+  /// - Dynamic UI that adapts to current locale
+  /// - Internationalized applications
+  /// - User preference-based display
+  ///
+  /// @since 1.0.0
+  String get getName => MENA.defaultLocale == 'ar' ? arabicName : englishName;
+
+  /// Returns the official country name based on the current default locale.
+  ///
+  /// **Returns:** The appropriate official name based on [MENA.defaultLocale]
+  /// - If locale is 'ar': returns [officalAR] (Arabic official name)
+  /// - If locale is 'en': returns [officalEN] (English official name)
+  ///
+  /// **Example:**
+  /// ```dart
+  /// final country = MENA.getBy(query: 'ae', key: MenaKeys.code);
+  /// final names = country?.country;
+  ///
+  /// // With Arabic locale (default)
+  /// print(MENA.defaultLocale); // 'ar'
+  /// print(names?.getOfficial); // "الإمارات العربية المتحدة"
+  ///
+  /// // Switch to English locale
+  /// MENA.setDefaultLocale('en');
+  /// print(names?.getOfficial); // "United Arab Emirates"
+  /// ```
+  ///
+  /// **Use Cases:**
+  /// - Official documents and forms
+  /// - Government applications
+  /// - Legal documentation
+  /// - Formal communications
+  ///
+  /// @since 1.0.0
+  String get getOfficial => MENA.defaultLocale == 'ar' ? officalAR : officalEN;
+
+  /// Returns the capital city name based on the current default locale.
+  ///
+  /// **Returns:** The appropriate capital name based on [MENA.defaultLocale]
+  /// - If locale is 'ar': returns [arabicCapital] (Arabic capital name)
+  /// - If locale is 'en': returns [englishCapital] (English capital name)
+  ///
+  /// **Example:**
+  /// ```dart
+  /// final country = MENA.getBy(query: 'ae', key: MenaKeys.code);
+  /// final names = country?.country;
+  ///
+  /// // With Arabic locale (default)
+  /// print(MENA.defaultLocale); // 'ar'
+  /// print(names?.getCapital); // "أبو ظبي"
+  ///
+  /// // Switch to English locale
+  /// MENA.setDefaultLocale('en');
+  /// print(names?.getCapital); // "Abu Dhabi"
+  /// ```
+  ///
+  /// **Use Cases:**
+  /// - Geographic information displays
+  /// - Educational applications
+  /// - Travel and tourism interfaces
+  /// - Location-based services
+  ///
+  /// @since 1.0.0
+  String get getCapital =>
+      MENA.defaultLocale == 'ar' ? arabicCapital : englishCapital;
+
   /// Serializes this model to a JSON map.
+  ///
+  /// **Returns:** A map containing all country properties
+  ///
+  /// **Example:**
+  /// ```dart
+  /// final country = MENA.getBy(query: 'ae', key: MenaKeys.code);
+  /// final json = country?.country.toJson();
+  /// // {
+  /// //   "officalEN": "United Arab Emirates",
+  /// //   "officalAR": "الإمارات العربية المتحدة",
+  /// //   "arabicName": "الإمارات",
+  /// //   "englishName": "United Arab Emirates",
+  /// //   "capitalEN": "Abu Dhabi",
+  /// //   "capitalAR": "أبو ظبي"
+  /// // }
+  /// ```
   Map<String, dynamic> toJson() => {
     'officalEN': officalEN,
     'officalAR': officalAR,

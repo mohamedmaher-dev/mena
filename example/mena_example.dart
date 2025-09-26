@@ -31,25 +31,25 @@ void _demonstrateSearchMethods() {
   print('------------------------');
 
   // 1. Search by ISO country code
-  final palestine = MENA.getByCode('ps');
+  final palestine = MENA.getBy(query: 'ps', key: MenaKeys.code);
   print('By Code (ps): ${palestine?.country.englishName}');
 
   // 2. Search by English name (partial matching)
-  final morocco = MENA.getByName('Morocco');
+  final morocco = MENA.getBy(query: 'Morocco', key: MenaKeys.englishName);
   print('By Name (Morocco): ${morocco?.country.officalEN}');
 
   // 3. Search by international dial code
-  final uae = MENA.getByDialCode('971');
+  final uae = MENA.getBy(query: '971', key: MenaKeys.dialCode);
   print(
     'By Dial Code (971): ${uae?.country.englishName} - Currency: ${uae?.currency}',
   );
 
   // 4. Search by currency code
-  final saudi = MENA.getByCurrencyCode('SAR');
+  final saudi = MENA.getBy(query: 'SAR', key: MenaKeys.currencyCode);
   print('By Currency (SAR): ${saudi?.country.englishName}');
 
   // 5. Direct index access
-  final firstCountry = MENA.getByIndex(0);
+  final firstCountry = MENA.getBy(query: '0', key: MenaKeys.code);
   print('By Index (0): ${firstCountry?.country.englishName}');
 
   print('');
@@ -62,7 +62,7 @@ void _exploreDataCollections() {
 
   print('Total MENA Countries: ${MENA.allCountries.length}'); // 19
   print('Middle East Countries: ${MENA.middleEast.length}'); // 12
-  print('North Africa Countries: ${MENA.northernAfrica.length}'); // 7
+  print('North Africa Countries: ${MENA.northAfrica.length}'); // 7
 
   // List all Middle East countries
   print('\nMiddle East Countries:');
@@ -72,7 +72,7 @@ void _exploreDataCollections() {
 
   // List all North Africa countries
   print('\nNorth Africa Countries:');
-  for (final country in MENA.northernAfrica) {
+  for (final country in MENA.northAfrica) {
     print('  • ${country.country.englishName} (${country.currency})');
   }
 
@@ -84,7 +84,7 @@ void _demonstrateLocalization() {
   print('🌍 Localization Demo:');
   print('----------------------');
 
-  final palestine = MENA.getByCode('ps');
+  final palestine = MENA.getBy(query: 'ps', key: MenaKeys.code);
   if (palestine != null) {
     print('Country: ${palestine.country.code.toUpperCase()} (Palestine)');
     print('English Common: ${palestine.country.englishName}');
@@ -128,7 +128,7 @@ void _practicalUseCases() {
 
   // Phone number formatting with Palestine
   print('📱 Phone Number Formatting (Palestine):');
-  final phoneCountry = MENA.getByDialCode('970');
+  final phoneCountry = MENA.getBy(query: '970', key: MenaKeys.dialCode);
   if (phoneCountry != null) {
     final localNumber = '501234567';
     final international = '${phoneCountry.dialCodeWithPlus}$localNumber';
@@ -144,32 +144,18 @@ void _practicalUseCases() {
   print('\n💰 E-commerce Currency:');
   final currencies = ['EGP', 'AED', 'SAR', 'ILS']; // Egypt first
   for (final currencyCode in currencies) {
-    final country = MENA.getByCurrencyCode(currencyCode);
+    final country = MENA.getBy(query: currencyCode, key: MenaKeys.currencyCode);
     if (country != null) {
       final currency = country.currency;
-      print(
-        '  ${currency.code}: ${currency.enAdjective} (${currency.arAdjective})',
-      );
+      print('  ${currency.code}: ${currency.type}');
     }
   }
 
   // JSON serialization for API with Palestine
   print('\n📡 JSON Serialization (Palestine):');
-  final apiCountry = MENA.getByCode('ps');
+  final apiCountry = MENA.getBy(query: 'ps', key: MenaKeys.code);
   if (apiCountry != null) {
-    final json = apiCountry.toJson();
-    print('  API Payload for ${apiCountry.country.englishName}:');
-    print('  {');
-    print('    "code": "${json['code']}"');
-    print('    "currency": {');
-    print('      "code": "${json['currency']['code']}"');
-    print('      "en": "${json['currency']['en']}"');
-    print('      "ar": "${json['currency']['ar']}"');
-    print('    }');
-    print('    "dialCode": "${json['dialCode']}"');
-    print('    "name": "${json['countryName']['en']}"');
-    print('    "nameArabic": "${json['countryName']['ar']}"');
-    print('  }');
+    print(apiCountry.toJson());
   }
 
   print('');
@@ -183,17 +169,17 @@ void _errorHandlingExamples() {
   // Null safety examples
   print('Safe null handling:');
 
-  final invalidCode = MENA.getByCode('xyz');
+  final invalidCode = MENA.getBy(query: 'xyz', key: MenaKeys.code);
   print('  Invalid code result: ${invalidCode ?? 'null (as expected)'}');
 
-  final invalidIndex = MENA.getByIndex(100);
+  final invalidIndex = MENA.getBy(query: '100', key: MenaKeys.code);
   print('  Out of bounds index: ${invalidIndex ?? 'null (as expected)'}');
 
-  final invalidCurrency = MENA.getByCurrencyCode('USD');
+  final invalidCurrency = MENA.getBy(query: 'USD', key: MenaKeys.currencyCode);
   print('  Non-MENA currency: ${invalidCurrency ?? 'null (as expected)'}');
 
   // Safe property access
-  final safeExample = MENA.getByCode('eg');
+  final safeExample = MENA.getBy(query: 'eg', key: MenaKeys.code);
   final safeName = safeExample?.country.englishName ?? 'Unknown Country';
   final safeCurrency = safeExample?.currency ?? 'N/A';
   print('  Safe access: $safeName uses $safeCurrency');

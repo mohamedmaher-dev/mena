@@ -16,7 +16,7 @@
 /// - **Levant**: Mix of Dinars, Pounds, and Shekels
 /// - **North Africa**: Dinars, Dirhams, and Pounds
 ///
-/// @since 1.1.0
+/// @since 1.0.0
 enum CurrencyType {
   /// Dinar - Traditional gold-based currency unit
   ///
@@ -130,10 +130,14 @@ enum CurrencyType {
 
   /// Returns currencies of this type used in MENA region.
   ///
+  /// Provides a list of ISO 4217 currency codes that use this currency type
+  /// within the MENA region, helping understand regional monetary patterns.
+  ///
   /// **Example:**
   /// ```dart
   /// final dinars = CurrencyType.dinar.menaCurrencies;
   /// // Returns: ['KWD', 'BHD', 'JOD', 'IQD', 'TND', 'DZD', 'LYD']
+  /// print('Dinar currencies: ${dinars.length}'); // 7 countries use dinars
   /// ```
   List<String> get menaCurrencies {
     switch (this) {
